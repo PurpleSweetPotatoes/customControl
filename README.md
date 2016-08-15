@@ -28,12 +28,6 @@ customControl
              netWorkType:(NetWorkType)netWorkType
             hasAnimation:(BOOL)hasAnimation
         compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
-    /**  参数做json编码的网络请求 */
-    + (void)postDataParameterWithUrl:(NSString *_Nullable)urlString
-                       parameter:(NSDictionary *_Nullable)parameter
-                 headerParameter:(NSDictionary *_Nullable)headerParameter
-                    hasAnimation:(BOOL)hasAnimation
-                compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
     /**  上传头像请求 block回传字典格式必须为@{"key":图片对应key值,"name":上传到服务器名字,"data":图片data数据} */
     + (void)postUploadWithUrl:(NSString *_Nullable)urlString
                 parameter:(NSDictionary *_Nullable)parameter
@@ -53,7 +47,7 @@ customControl
 ####NSString+safe.h
 关于NSString加密解密处理的方法类目,包含有MD5和SHA散列加密，另含NSSrring和NSData的Base64加密解密
 ####BQKit
-  其中BQWeakProxy和BQFPSLabel为模仿YYKit所写的虚拟代理类和帧数检测类，用以防止循环引用所和检测刷新频率使用。BQTextFieldView为所写的一个文本框视图，效果图如下
+其中BQWeakProxy和BQFPSLabel为模仿YYKit所写的虚拟代理类和帧数检测类，用以防止循环引用所和检测刷新频率使用。BQTextFieldView为所写的一个文本框视图，效果图如下
   
 ![xiaoguo.gif](http://oblos8tvd.bkt.clouddn.com/xiaoguo.gif)
 

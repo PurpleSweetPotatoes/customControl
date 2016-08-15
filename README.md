@@ -55,7 +55,7 @@ customControl
 ####BQKit
   其中BQWeakProxy和BQFPSLabel为模仿YYKit所写的虚拟代理类和帧数检测类，用以防止循环引用所和检测刷新频率使用。BQTextFieldView为所写的一个文本框视图，效果图如下
   
-![](http://oblos8tvd.bkt.clouddn.com/xiaoguo.gif)
+![xiaoguo.gif](http://oblos8tvd.bkt.clouddn.com/xiaoguo.gif)
 
 后期有新的封装会持续加入，若代码中有何不妥之处欢迎指出。
 

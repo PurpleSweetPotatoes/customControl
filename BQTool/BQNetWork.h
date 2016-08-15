@@ -33,13 +33,6 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
             hasAnimation:(BOOL)hasAnimation
         compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
 
-/**  参数做json编码的网络请求 */
-+ (void)postDataParameterWithUrl:(NSString *_Nullable)urlString
-                       parameter:(NSDictionary *_Nullable)parameter
-                 headerParameter:(NSDictionary *_Nullable)headerParameter
-                    hasAnimation:(BOOL)hasAnimation
-                compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
-
 /**  上传头像请求 block回传字典格式必须为@{"key":图片对应key值,"name":上传到服务器名字,"data":图片data数据} */
 + (void)postUploadWithUrl:(NSString *_Nullable)urlString
                 parameter:(NSDictionary *_Nullable)parameter
@@ -47,6 +40,4 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
               netWorkType:(NetWorkType)netWorkType
              hasAnimation:(BOOL)hasAnimation
          compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
-
-
 @end

@@ -28,11 +28,10 @@ static CGFloat const timeOutInterval = 15.0f;
 {
     NSMutableURLRequest *request = [self configRequestWithUrl:urlString parameter:parameter headerParameter:nil netWorkType:netWorkType];
     [self asyncDataWithRequest:request hasAnimation:hasAnimation compeletedHandle:^(id  _Nullable content, BOOL success) {
-        if (handle != nil) {
-            handle(content,success);
-        }
+        handle(content,success);
     }];
 }
+
 + (void)asyncDataWithUrl:(NSString *)urlString
                parameter:(NSDictionary *)parameter
          headerParameter:(NSDictionary *)headerParameter
@@ -50,7 +49,6 @@ static CGFloat const timeOutInterval = 15.0f;
                               headerParameter:(NSDictionary *)headerParameter
                                   netWorkType:(NetWorkType)netWorkType
 {
-    NSLog(@"\nURL地址:%@\n请求参数:\n%@\n请求方式:%@",urlString,parameter,netWorkType == netWorkTypeGet ? @"GET" : @"POST");
     NSMutableURLRequest *request;
     if (netWorkType == netWorkTypeGet) {
         NSURL *url = [self addUrlString:urlString parameter:parameter];
@@ -69,26 +67,6 @@ static CGFloat const timeOutInterval = 15.0f;
     }];
     request.timeoutInterval = timeOutInterval;
     return request;
-}
-+ (void)postDataParameterWithUrl:(NSString *)urlString
-                       parameter:(NSDictionary *)parameter
-                 headerParameter:(NSDictionary *_Nullable)headerParameter
-                    hasAnimation:(BOOL)hasAnimation
-                compeletedHandle:(void (^)(id _Nullable, BOOL))handle {
-    NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    [headerParameter enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        if ([request.allHTTPHeaderFields.allKeys containsObject:key]) {
-            [request setValue:obj forHTTPHeaderField:key];
-        }else {
-            [request addValue:obj forHTTPHeaderField:key];
-        }
-    }];
-    request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameter options:NSJSONWritingPrettyPrinted error:nil];
-    request.HTTPMethod = @"POST";
-    request.timeoutInterval = timeOutInterval;
-    [self asyncDataWithRequest:request hasAnimation:hasAnimation compeletedHandle:^(id  _Nullable content, BOOL success) {
-        handle(content, success);
-    }];
 }
 
 + (void)asyncDataWithRequest:(NSMutableURLRequest *)request
@@ -111,7 +89,6 @@ static CGFloat const timeOutInterval = 15.0f;
                     NSLog(@"数据json转化错误:%@",error.localizedDescription);
                     handle(data, YES);
                 }else {
-                    content = [BQTools valuesForamtToStringWithDict:content];
                     handle(content,YES);
                 }
             }else {
@@ -158,7 +135,6 @@ static CGFloat const timeOutInterval = 15.0f;
     }] resume];
 }
 
-/**  配置上传请求体格式,此处为图片上传请求体格式 */
 + (NSMutableURLRequest *)configPostImageURLWithString:(NSString *)string parameters:(NSDictionary *)parameters picBlock:(NSDictionary *_Nullable(^_Nullable)())picBlock {
     //分界线的标识符
     NSString *TWITTERFON_FORM_BOUNDARY = @"boundary";
@@ -193,7 +169,7 @@ static CGFloat const timeOutInterval = 15.0f;
         dict = picBlock();
     }
     if (dict != nil) {
-        //声明字段，文件名
+        //声明file字段，文件名为boris.png
         [body appendFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n",dict[@"key"],dict[@"name"]];
         //声明上传文件的格式
         [body appendFormat:@"Content-Type: image/jpeg\r\n\r\n"];
@@ -219,7 +195,7 @@ static CGFloat const timeOutInterval = 15.0f;
     //设置HTTPHeader
     [request setValue:content forHTTPHeaderField:@"Content-Type"];
     //设置Content-Length
-    [request setValue:[NSString stringWithFormat:@"%d", [myRequestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%ld", [myRequestData length]] forHTTPHeaderField:@"Content-Length"];
     //设置http body
     [request setHTTPBody:myRequestData];
     
@@ -390,7 +366,9 @@ static BQActivityView *activiyView;
         //子图层的仿射变换是基于repelicator图层的锚点，因此这里将子图层的位置摆放到此锚点附近。
         CGPoint point = [repelicator convertPoint:repelicator.position fromLayer:self.layer];
         layer.position = CGPointMake(point.x, point.y - 20);
-        layer.backgroundColor = MainThemeColor.CGColor;
+#warning 修改等待提示颜色
+        layer.backgroundColor = [UIColor cyanColor].CGColor;
+        
         layer.cornerRadius = 5;
         layer.transform = CATransform3DMakeScale(0.01, 0.01, 1);
         _showlayer = layer;

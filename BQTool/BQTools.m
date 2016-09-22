@@ -9,14 +9,13 @@
 #import "BQTools.h"
 #import <objc/runtime.h>
 
-
-
 @implementation BQTools
 
 + (void)showMessageWithTitle:(NSString *)title
                      content:(NSString *)content {
     [self showMessageWithTitle:title content:content buttonTitles:@[@"确定"] clickedHandle:nil];
 }
+
 + (void)showMessageWithTitle:(NSString *)title
                      content:(NSString *)content
                 buttonTitles:(NSArray<NSString *> *)titles
@@ -42,12 +41,14 @@
         }
     }];
 }
+
 + (void)showMessageWithTitle:(NSString *)title
                      content:(NSString *)content
                 buttonTitles:(NSArray <NSString *> *)titles
                clickedHandle:(void(^)(NSInteger index))clickedBtn {
     [self showMessageWithTitle:title content:content buttonTitles:titles clickedHandle:clickedBtn compeletedHandle:nil];
 }
+
 + (void)showMessageWithTitle:(NSString *)title
                      content:(NSString *)content
                  disMissTime:(NSTimeInterval)time {
@@ -65,7 +66,9 @@
         });
     }];
 }
-+ (void)encodeWithObject:(NSObject *)encodeObject withcoder:(NSCoder *)aCoder{
+
++ (void)encodeWithObject:(NSObject *)encodeObject
+               withcoder:(NSCoder *)aCoder{
     //获取传入类
     Class cla = [encodeObject class];
     while (cla != [NSObject class]) {
@@ -98,7 +101,9 @@
     }
     
 }
-+ (void)unencodeWithObject:(NSObject *)unarchObject withcoder:(NSCoder *)aDecoder{
+
++ (void)unencodeWithObject:(NSObject *)unarchObject
+                 withcoder:(NSCoder *)aDecoder{
     //获取传入类
     Class cla = [unarchObject class];
     while (cla != [NSObject class]) {
@@ -137,13 +142,20 @@
     }
     return vc;
 }
+
 + (NSString *)currentSystemVersion {
    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 }
+
++ (NSString *)currentBundleIdentifier {
+    return [NSBundle mainBundle].bundleIdentifier;
+}
+
 + (UIColor *)randomColor {
     UIColor * color = [UIColor colorWithRed:arc4random() % 256 / 255.0 green:arc4random() % 256 / 255.0 blue:arc4random() % 256 / 255.0 alpha:1];
     return color;
 }
+
 + (NSMutableArray *)valuesForamtToStringWithArray:(NSArray *)array {
     NSMutableArray * newArray = [NSMutableArray array];
     for (id obj in array) {
@@ -163,6 +175,7 @@
     }
     return newArray;
 }
+
 + (NSMutableDictionary *)valuesForamtToStringWithDict:(NSDictionary *)dict {
     __block NSMutableDictionary * newDict = [NSMutableDictionary dictionary];
     [dict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
@@ -183,6 +196,36 @@
     }];
     return newDict;
 }
+
+
++ (NSMutableDictionary *)getKeychain {
+    NSString * serveice = [self currentBundleIdentifier];
+    
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:(id)kSecClassGenericPassword,(id)kSecClass,serveice,(id)kSecAttrService,serveice,(id)kSecAttrAccount,(id)kSecAttrAccessibleAfterFirstUnlock,(id)kSecAttrAccessible, nil];
+}
+
++ (BOOL)saveKeychainWithData:(NSData *)data {
+    NSMutableDictionary * keychainQuery = [self getKeychain];
+    SecItemDelete((CFDictionaryRef)keychainQuery);
+    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:data] forKey:(id)kSecValueData];
+    OSStatus statu = SecItemAdd((CFDictionaryRef)keychainQuery, NULL);
+    return statu == noErr;
+}
+
++ (NSData *)loadKeyChainValue {
+    NSMutableDictionary * keychainQuery = [self getKeychain];
+    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+    [keychainQuery setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+    CFDataRef result = nil;
+    SecItemCopyMatching((CFDictionaryRef)keychainQuery, (CFTypeRef *)&result);
+    id data = nil;
+    if (result != nil) {
+        data = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)result];
+        CFRelease(result);
+    }
+    return data;
+}
+
 + (NSString *)jsonStringWithObject:(id)object {
     NSError * error;
     NSData * data = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:&error];
@@ -190,9 +233,10 @@
         return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }else {
         NSLog(@"jsonString format error:%@",error.localizedDescription);
-        return @"";
+        return nil;
     }
 }
+
 @end
 
 //----------------------- model输出格式调整 ----------
@@ -211,7 +255,8 @@
     NSMutableString *resultStr = [NSMutableString stringWithFormat:@"%@ = {\n",[self pkxDescription]];
     while (class != [NSObject class]) {
         // 0.如果是UIResponder或CALayer的子类,就使用系统的默认输出格式
-        if ([[class description] hasPrefix:@"NS"] || [[class description] hasPrefix:@"__"]|| [[class description] hasPrefix:@"AV"] || [[class description] hasPrefix:@"_UIFlowLayout"] || [[class description] hasPrefix:@"UITouchesEvent"] || [[class description] hasPrefix:@"MP"] || [class isSubclassOfClass:[UIResponder class]] || [class isSubclassOfClass:[CALayer class]] || [class isSubclassOfClass:[UIImage class]])return [self pkxDescription];
+        NSString * description = [class description];
+        if ([description hasPrefix:@"NS"] || [description hasPrefix:@"__"]|| [description hasPrefix:@"AV"] || [description hasPrefix:@"_UIFlowLayout"] || [description hasPrefix:@"UITouchesEvent"] || [description hasPrefix:@"MP"] || [class isSubclassOfClass:[UIResponder class]] || [class isSubclassOfClass:[CALayer class]] || [class isSubclassOfClass:[UIImage class]])return [self pkxDescription];
         unsigned int count = 0;
         //　1.获取类成员变量列表，count为类成员变量数量
         Ivar *vars = class_copyIvarList(class, &count);

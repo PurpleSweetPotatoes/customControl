@@ -50,6 +50,18 @@
 /**  获取当前APP版本号 */
 + (NSString * _Nullable)currentSystemVersion;
 
+/**  获取APP的标示符 */
++ (NSString * _Nullable)currentBundleIdentifier;
+
+/**  利用钥匙串保存数据 */
++ (BOOL)saveKeychainWithData:(NSData * _Nullable)data;
+
+/**  加载钥匙串数据 */
++ (NSData * _Nullable)loadKeyChainValue;
+
+/**  删除钥匙串数据 */
++ (BOOL)deleteKeyChainValue;
+
 /**  随机色 */
 + (UIColor * _Nullable)randomColor;
 

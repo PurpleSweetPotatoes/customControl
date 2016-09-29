@@ -1,0 +1,13 @@
+//
+//  NSDictionary+Log.h
+//  Test
+//
+//  Created by baiqiang on 16/9/29.
+//  Copyright © 2016年 白强. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface NSDictionary (Log)
+
+@end

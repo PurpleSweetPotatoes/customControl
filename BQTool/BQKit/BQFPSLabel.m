@@ -8,6 +8,7 @@
 
 #import "BQFPSLabel.h"
 #import "BQWeakProxy.h"
+ 
 @interface BQFPSLabel()
 {
     NSUInteger _count;

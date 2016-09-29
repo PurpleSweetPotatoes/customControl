@@ -14,6 +14,9 @@
 #import "BQScreenAdaptation.h"
 #import "BQWeakProxy.h"
 #import "NSString+safe.h"
+#import "BQDefineHead.h"
+#import "BQImagePickVc.h"
+#import "BQFPSLabel.h"
 
 #endif /* BQHeader_h */
 

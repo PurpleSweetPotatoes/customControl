@@ -10,7 +10,7 @@
 #define BQScreenAdaptation_h
 
 #import <UIKit/UIKit.h>
-
+#import "BQDefineHead.h"
 /**
     将IPHONE_WIDTH改为对应设计图的宽度
     在使用的时候直接使用BQAdaptationFrame函数
@@ -18,32 +18,28 @@
  */
 #define IPHONE_WIDTH 375
 
-#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
-#define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
-
-#define Inline static inline
-
-Inline CGFloat BQAdaptationWidth() {
+FOUNDATION_STATIC_INLINE CGFloat BQAdaptationWidth() {
     return SCREEN_WIDTH / IPHONE_WIDTH;
 }
 
-Inline CGFloat BQAdaptation(CGFloat x) {
+
+FOUNDATION_STATIC_INLINE CGFloat BQAdaptation(CGFloat x) {
     return x * BQAdaptationWidth();
 }
-Inline CGSize BQadaptationSize(CGFloat width, CGFloat height) {
+FOUNDATION_STATIC_INLINE CGSize BQadaptationSize(CGFloat width, CGFloat height) {
     CGFloat newWidth = width * BQAdaptationWidth();
     CGFloat newHeight = height * BQAdaptationWidth();
     CGSize newSize = CGSizeMake(newWidth, newHeight);
     return newSize;
 }
-Inline CGPoint BQadaptationPoint(CGFloat x, CGFloat y) {
+FOUNDATION_STATIC_INLINE CGPoint BQadaptationPoint(CGFloat x, CGFloat y) {
     CGFloat newX = x * BQAdaptationWidth();
     CGFloat newY = y * BQAdaptationWidth();
     CGPoint point = CGPointMake(newX, newY);
     return point;
 }
 
-Inline CGRect BQAdaptationFrame(CGFloat x,CGFloat y, CGFloat width,CGFloat height)  {
+FOUNDATION_STATIC_INLINE CGRect BQAdaptationFrame(CGFloat x,CGFloat y, CGFloat width,CGFloat height)  {
     CGFloat newX = x * BQAdaptationWidth();
     CGFloat newY = y * BQAdaptationWidth();
     CGFloat newWidth = width * BQAdaptationWidth();

@@ -35,11 +35,11 @@ customControl
               netWorkType:(NetWorkType)netWorkType
              hasAnimation:(BOOL)hasAnimation
          compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;     
-####BQImagePickVc
-图片选择器，经过封装后的图片选择器非常简单，自动判断时候支持照相功能，使用只需推出视图即可
+####BQImagePicker
+图片选择器，自动判断是否支持照相功能
 
-    //此处需要让BQImagePickVc被持有，否则会造成崩溃
-    [self.imagePick showPickerImageMessageWihtVc:self handleImage:^(UIImage *image) {
+    //此处若不使用自定义裁剪方式、则使用showPickerImageWithHandleImage方法，默认使用系统裁剪方式
+    [BQImagePicker showPickerImageWithClipType:ClipSizeTypeTwoScaleOne handleImage:^(UIImage *image) {
         NSLog(@"%@",image);
     }];
 ####BQTools.h

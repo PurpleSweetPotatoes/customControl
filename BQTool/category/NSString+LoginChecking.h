@@ -10,9 +10,6 @@
 
 @interface NSString (LoginChecking)
 
-/**  是否为空 */
-- (BOOL)isEmpty;
-
 /**  是否为QQ账号 */
 - (BOOL)isQQ;
 

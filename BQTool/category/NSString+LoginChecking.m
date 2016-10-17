@@ -10,10 +10,6 @@
 
 @implementation NSString (LoginChecking)
 
-- (BOOL)isEmpty {
-    return self.length == 0 ? NO : YES;
-}
-
 - (BOOL)isQQ {
     return [self match:@"^[1-9]\\d{4,10}"];
 }

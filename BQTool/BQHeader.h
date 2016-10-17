@@ -17,6 +17,7 @@
 #import "BQDefineHead.h"
 #import "BQImagePickVc.h"
 #import "BQFPSLabel.h"
+#import "NSObject+Check.h"
 
 #endif /* BQHeader_h */
 

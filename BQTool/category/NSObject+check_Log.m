@@ -1,17 +1,41 @@
 //
-//  NSObject+Log.m
-//  Test
+//  NSObject+Check_Log.m
+//  MyCocoPods
 //
-//  Created by baiqiang on 16/9/29.
-//  Copyright © 2016年 白强. All rights reserved.
+//  Created by baiqiang on 16/10/28.
+//  Copyright © 2016年 baiqiang. All rights reserved.
 //
 
-#import "NSObject+Log.h"
+#import "NSObject+check_Log.h"
 #import <objc/runtime.h>
-#import <UIKit/UIKit.h>
+@implementation NSObject (Check_Log)
+
+- (BOOL)isEmpty {
+    if ([self isKindOfClass:[NSDictionary class]]) {
+        NSDictionary * obj = (NSDictionary *)self;
+        if (obj.allKeys.count > 0) {
+            return NO;
+        }
+    }else if ([self isKindOfClass:[NSArray class]]) {
+        NSArray * obj = (NSArray *)self;
+        if (obj.count > 0) {
+            return NO;
+        }
+    }else if ([self isKindOfClass:[UITextField class]]) {
+        UITextField * obj = (UITextField *)self;
+        if (obj.text.length > 0) {
+            return NO;
+        }
+    }else if ([self isKindOfClass:[UITextView class]]) {
+        UITextView * obj = (UITextView *)self;
+        if (obj.text.length > 0) {
+            return NO;
+        }
+    }
+    return YES;
+}
 
 //----------------------- model输出格式调整 ----------
-@implementation NSObject (Log)
 + (void)load {
     // 交换两个方法的实现
     method_exchangeImplementations(class_getInstanceMethod([NSObject class], @selector(description)), class_getInstanceMethod([NSObject class], @selector(pkxDescription)));
@@ -41,7 +65,7 @@
             varName = [varName substringFromIndex:1];
             // 5.获得成员变量对应的值
             id value = [self valueForKey:varName];
-            [resultStr appendFormat:@"\t%@ = %@;\n", varName, value];
+            [resultStr appendFormat:@"\t%@ : %@;\n", varName, value];
         }
         // 6.释放指针
         free(vars);

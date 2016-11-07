@@ -10,14 +10,15 @@
 #define BQHeader_h
 
 #import "BQTools.h"
+#import "BQPopView.h"
 #import "BQNetWork.h"
 #import "BQScreenAdaptation.h"
 #import "BQWeakProxy.h"
-#import "NSString+safe.h"
+#import "NSString+Safe.h"
 #import "BQDefineHead.h"
-#import "BQImagePickVc.h"
+#import "BQImagePicker.h"
 #import "BQFPSLabel.h"
-#import "NSObject+Check.h"
+#import "NSObject+check_Log.h"
 
 #endif /* BQHeader_h */
 

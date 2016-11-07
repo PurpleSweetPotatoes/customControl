@@ -1,16 +1,15 @@
 //
-//  NSString+Hash.m
-//  01-数据安全
+//  NSString+Safe.m
+//  MyCocoPods
 //
-//  Created by 刘凡 on 14/11/12.
-//  Copyright (c) 2014年 itcast. All rights reserved.
+//  Created by baiqiang on 16/10/28.
+//  Copyright © 2016年 baiqiang. All rights reserved.
 //
 
-#import "NSString+safe.h"
+#import "NSString+Safe.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-@implementation NSString (Hash)
-
+@implementation NSString (Safe)
 #pragma mark - 散列函数
 - (NSString *)md5String {
     const char *str = self.UTF8String;
@@ -224,6 +223,24 @@
     return [strM copy];
 }
 
+-(NSString *)base64String
+{
+    NSData *utf8encoding = [self dataUsingEncoding:NSUTF8StringEncoding];
+    return [MF_Base64Codec base64StringFromData:utf8encoding];
+}
+-(NSString *)base64UrlEncodedString
+{
+    return [MF_Base64Codec base64UrlEncodedStringFromBase64String:[self base64String]];
+}
++(NSString *)stringFromBase64String:(NSString *)base64String
+{
+    NSData *utf8encoding = [MF_Base64Codec dataFromBase64String:base64String];
+    return [[NSString alloc] initWithData:utf8encoding encoding:NSUTF8StringEncoding];
+}
++(NSString *)stringFromBase64UrlEncodedString:(NSString *)base64UrlEncodedString
+{
+    return [self stringFromBase64String:[MF_Base64Codec base64StringFromBase64UrlEncodedString:base64UrlEncodedString]];
+}
 @end
 
 @implementation MF_Base64Codec
@@ -422,45 +439,5 @@
         }
     }
     return encoding;
-}
-@end
-
-@implementation NSString (Base64Addition)
--(NSString *)base64String
-{
-    NSData *utf8encoding = [self dataUsingEncoding:NSUTF8StringEncoding];
-    return [MF_Base64Codec base64StringFromData:utf8encoding];
-}
--(NSString *)base64UrlEncodedString
-{
-    return [MF_Base64Codec base64UrlEncodedStringFromBase64String:[self base64String]];
-}
-+(NSString *)stringFromBase64String:(NSString *)base64String
-{
-    NSData *utf8encoding = [MF_Base64Codec dataFromBase64String:base64String];
-    return [[NSString alloc] initWithData:utf8encoding encoding:NSUTF8StringEncoding];
-}
-+(NSString *)stringFromBase64UrlEncodedString:(NSString *)base64UrlEncodedString
-{
-    return [self stringFromBase64String:[MF_Base64Codec base64StringFromBase64UrlEncodedString:base64UrlEncodedString]];
-}
-@end
-
-@implementation NSData (Base64Addition)
-+(NSData *)dataWithBase64String:(NSString *)base64String
-{
-    return [MF_Base64Codec dataFromBase64String:base64String];
-}
-+(NSData *)dataWithBase64UrlEncodedString:(NSString *)base64UrlEncodedString
-{
-    return [self dataWithBase64String:[MF_Base64Codec base64StringFromBase64UrlEncodedString:base64UrlEncodedString]];
-}
--(NSString *)base64String
-{
-    return [MF_Base64Codec base64StringFromData:self];
-}
--(NSString *)base64UrlEncodedString
-{
-    return [MF_Base64Codec base64UrlEncodedStringFromBase64String:[self base64String]];
 }
 @end

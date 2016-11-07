@@ -1,16 +1,14 @@
 //
-//  NSString+Hash.m
-//  md5编码+hash编码+Base64编码+Json转字典
+//  NSString+Safe.h
+//  MyCocoPods
 //
-//  Created by 刘凡 on 14/11/12.
-//  Copyright (c) 2014年 itcast. All rights reserved.
+//  Created by baiqiang on 16/10/28.
+//  Copyright © 2016年 baiqiang. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-
-@interface NSString (Hash)
-
+@interface NSString (Safe)
 #pragma mark - 散列函数
 /**
  *  计算MD5散列结果
@@ -160,19 +158,11 @@
  *  @return 128个字符的SHA512散列字符串
  */
 - (NSString *)fileSHA512Hash;
-
-@end
 #pragma mark - 字符串base64编码解码
-@interface NSString (Base64Addition)
+/**  字符串base64解码 */
 +(NSString *)stringFromBase64String:(NSString *)base64String;
 +(NSString *)stringFromBase64UrlEncodedString:(NSString *)base64UrlEncodedString;
--(NSString *)base64String;
--(NSString *)base64UrlEncodedString;
-@end
-#pragma mark - 二进制数据base64编码解码
-@interface NSData (Base64Addition)
-+(NSData *)dataWithBase64String:(NSString *)base64String;
-+(NSData *)dataWithBase64UrlEncodedString:(NSString *)base64UrlEncodedString;
+/**  字符串base64编码 */
 -(NSString *)base64String;
 -(NSString *)base64UrlEncodedString;
 @end

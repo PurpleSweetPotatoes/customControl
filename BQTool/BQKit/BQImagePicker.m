@@ -89,7 +89,6 @@
             self.handleBlock(image);
         }
     }
-    
 }
 - (void)showClipVcWithImage:(UIImage *)image {
     __weak typeof(self) weakSelf = self;

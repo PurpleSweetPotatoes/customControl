@@ -12,11 +12,6 @@
 @implementation BQTools
 
 + (void)showMessageWithTitle:(NSString *)title
-                     content:(NSString *)content {
-    [self showMessageWithTitle:title content:content buttonTitles:@[@"确定"] clickedHandle:nil];
-}
-
-+ (void)showMessageWithTitle:(NSString *)title
                      content:(NSString *)content
                 buttonTitles:(NSArray<NSString *> *)titles
                clickedHandle:(void (^)(NSInteger))clickedBtn
@@ -47,24 +42,6 @@
                 buttonTitles:(NSArray <NSString *> *)titles
                clickedHandle:(void(^)(NSInteger index))clickedBtn {
     [self showMessageWithTitle:title content:content buttonTitles:titles clickedHandle:clickedBtn compeletedHandle:nil];
-}
-
-+ (void)showMessageWithTitle:(NSString *)title
-                     content:(NSString *)content
-                 disMissTime:(NSTimeInterval)time {
-    if (title == nil) {
-        title = @"";
-    }
-    if (time == 0) {
-        time = 0.75f;
-    }
-    UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
-    UIViewController *currentVc = [self currentViewController];
-    [currentVc presentViewController:alertVc animated:YES completion:^{
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [alertVc dismissViewControllerAnimated:YES completion:nil];
-        });
-    }];
 }
 
 + (void)encodeWithObject:(NSObject *)encodeObject

@@ -11,25 +11,24 @@
 #import "BQTools.h"
 
 static CGFloat const timeOutInterval = 15.0f;
-@interface BQActivityView : UIView
-/**  显示活动指示器 */
-+ (void)showActiviTy;
-/**  关闭活动指示器 */
-+ (void)hideActiviTy;
-@end
 
 @implementation BQNetWork
 
-+ (void)asyncDataWithUrl:(NSString *)urlString
++ (void)asyncDataWithUrl:(NSString *_Nullable)urlString
+               parameter:(NSDictionary *_Nullable)parameter
+             netWorkType:(NetWorkType)netWorkType
+        compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle {
+    NSMutableURLRequest *request = [self configRequestWithUrl:urlString parameter:parameter headerParameter:nil netWorkType:netWorkType];
+    [self asyncDataWithRequest:request hasAnimation:NO compeletedHandle:handle];
+}
+
++ (void)asyncDataAnimationWithUrl:(NSString *)urlString
                parameter:(NSDictionary *)parameter
              netWorkType:(NetWorkType)netWorkType
-            hasAnimation:(BOOL)hasAnimation
         compeletedHandle:(void (^)(id _Nullable, BOOL))handle
 {
     NSMutableURLRequest *request = [self configRequestWithUrl:urlString parameter:parameter headerParameter:nil netWorkType:netWorkType];
-    [self asyncDataWithRequest:request hasAnimation:hasAnimation compeletedHandle:^(id  _Nullable content, BOOL success) {
-        handle(content,success);
-    }];
+    [self asyncDataWithRequest:request hasAnimation:YES compeletedHandle:handle];
 }
 
 + (void)asyncDataWithUrl:(NSString *)urlString
@@ -39,9 +38,7 @@ static CGFloat const timeOutInterval = 15.0f;
             hasAnimation:(BOOL)hasAnimation
         compeletedHandle:(void (^)(id _Nullable, BOOL))handle {
     NSMutableURLRequest * request = [self configRequestWithUrl:urlString parameter:parameter headerParameter:headerParameter netWorkType:netWorkType];
-    [self asyncDataWithRequest:request hasAnimation:hasAnimation compeletedHandle:^(id _Nullable content, BOOL success) {
-        handle(content, success);
-    }];
+    [self asyncDataWithRequest:request hasAnimation:hasAnimation compeletedHandle:handle];
 }
 
 + (NSMutableURLRequest *)configRequestWithUrl:(NSString *)urlString
@@ -49,6 +46,7 @@ static CGFloat const timeOutInterval = 15.0f;
                               headerParameter:(NSDictionary *)headerParameter
                                   netWorkType:(NetWorkType)netWorkType
 {
+    NSLog(@"******* 网络请求 *******\nurl: %@\nparams: %@",urlString, parameter);
     NSMutableURLRequest *request;
     if (netWorkType == netWorkTypeGet) {
         NSURL *url = [self addUrlString:urlString parameter:parameter];
@@ -82,7 +80,6 @@ static CGFloat const timeOutInterval = 15.0f;
                 [BQActivityView hideActiviTy];
             }
             if (error == nil) {
-                NSLog(@"asyncUrl : %@",response.URL);
                 NSError *error;
                 id content = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 if (error) {
@@ -92,7 +89,7 @@ static CGFloat const timeOutInterval = 15.0f;
                     handle(content,YES);
                 }
             }else {
-                [BQTools showMessageWithTitle:@"温馨提示" content:[self getStringMessageFromErrorInfo:error]];
+                [BQTools showMessageWithTitle:@"提示" content:[self getStringMessageFromErrorInfo:error] buttonTitles:@[@"确定"] clickedHandle:nil];
                 handle(data, NO);
             }
         });
@@ -128,7 +125,7 @@ static CGFloat const timeOutInterval = 15.0f;
                     handle(content,YES);
                 }
             }else {
-                [BQTools showMessageWithTitle:@"温馨提示" content:[self getStringMessageFromErrorInfo:error]];
+                [BQTools showMessageWithTitle:@"提示" content:[self getStringMessageFromErrorInfo:error] buttonTitles:@[@"确定"] clickedHandle:nil];
                 handle(data, NO);
             }
         });

@@ -19,7 +19,7 @@
 #define IPHONE_WIDTH 375
 
 FOUNDATION_STATIC_INLINE CGFloat BQAdaptationWidth() {
-    return SCREEN_WIDTH / IPHONE_WIDTH;
+    return Screen_Widht / IPHONE_WIDTH;
 }
 
 

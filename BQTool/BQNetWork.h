@@ -14,7 +14,7 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
 };
 
 /**
- *  网络请求类 默认带有等待指示器
+ *  网络请求类 可选使用等待指示器
  */
 @interface BQNetWork : NSObject
 
@@ -22,8 +22,13 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
 + (void)asyncDataWithUrl:(NSString *_Nullable)urlString
                parameter:(NSDictionary *_Nullable)parameter
              netWorkType:(NetWorkType)netWorkType
-            hasAnimation:(BOOL)hasAnimation
         compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
+
+/**  带指示器的网络请求 */
++ (void)asyncDataAnimationWithUrl:(NSString *_Nullable)urlString
+                        parameter:(NSDictionary *_Nullable)parameter
+                      netWorkType:(NetWorkType)netWorkType
+                 compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
 
 /**  可配置请求头的网络请求 */
 + (void)asyncDataWithUrl:(NSString *_Nullable)urlString
@@ -40,4 +45,11 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
               netWorkType:(NetWorkType)netWorkType
              hasAnimation:(BOOL)hasAnimation
          compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
+@end
+
+@interface BQActivityView : UIView
+/**  显示活动指示器 */
++ (void)showActiviTy;
+/**  关闭活动指示器 */
++ (void)hideActiviTy;
 @end

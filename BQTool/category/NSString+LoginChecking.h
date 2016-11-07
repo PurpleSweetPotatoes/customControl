@@ -22,6 +22,9 @@
 /**  是否为邮箱 */
 - (BOOL)isMailbox;
 
+/**  是否为身份证 */
+- (BOOL)isCardId;
+
 /**  是否含有unicode编码 */
 - (BOOL)hasUnicode;
 @end

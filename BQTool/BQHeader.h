@@ -10,6 +10,7 @@
 #define BQHeader_h
 
 #import "BQTools.h"
+#import "BQBaseVc.h"
 #import "BQPopView.h"
 #import "BQNetWork.h"
 #import "BQScreenAdaptation.h"

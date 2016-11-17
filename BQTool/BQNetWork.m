@@ -17,7 +17,7 @@ static CGFloat const timeOutInterval = 15.0f;
 + (void)asyncDataWithUrl:(NSString *_Nullable)urlString
                parameter:(NSDictionary *_Nullable)parameter
              netWorkType:(NetWorkType)netWorkType
-        compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle {
+        compeletedHandle:(void(^_Nullable)(id _Nullable content))handle {
     NSMutableURLRequest *request = [self configRequestWithUrl:urlString parameter:parameter headerParameter:nil netWorkType:netWorkType];
     [self asyncDataWithRequest:request hasAnimation:NO compeletedHandle:handle];
 }
@@ -25,7 +25,7 @@ static CGFloat const timeOutInterval = 15.0f;
 + (void)asyncDataAnimationWithUrl:(NSString *)urlString
                parameter:(NSDictionary *)parameter
              netWorkType:(NetWorkType)netWorkType
-        compeletedHandle:(void (^)(id _Nullable, BOOL))handle
+        compeletedHandle:(void (^)(id _Nullable))handle
 {
     NSMutableURLRequest *request = [self configRequestWithUrl:urlString parameter:parameter headerParameter:nil netWorkType:netWorkType];
     [self asyncDataWithRequest:request hasAnimation:YES compeletedHandle:handle];
@@ -36,7 +36,7 @@ static CGFloat const timeOutInterval = 15.0f;
          headerParameter:(NSDictionary *)headerParameter
              netWorkType:(NetWorkType)netWorkType
             hasAnimation:(BOOL)hasAnimation
-        compeletedHandle:(void (^)(id _Nullable, BOOL))handle {
+        compeletedHandle:(void (^)(id _Nullable))handle {
     NSMutableURLRequest * request = [self configRequestWithUrl:urlString parameter:parameter headerParameter:headerParameter netWorkType:netWorkType];
     [self asyncDataWithRequest:request hasAnimation:hasAnimation compeletedHandle:handle];
 }
@@ -69,7 +69,7 @@ static CGFloat const timeOutInterval = 15.0f;
 
 + (void)asyncDataWithRequest:(NSMutableURLRequest *)request
                 hasAnimation:(BOOL)hasAnimation
-            compeletedHandle:(void (^)(id _Nullable, BOOL))handle {
+            compeletedHandle:(void (^)(id _Nullable))handle {
     if (hasAnimation == YES) {
         [BQActivityView showActiviTy];
     }
@@ -83,14 +83,13 @@ static CGFloat const timeOutInterval = 15.0f;
                 NSError *error;
                 id content = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 if (error) {
-                    NSLog(@"数据json转化错误:%@",error.localizedDescription);
-                    handle(data, YES);
+                    [BQTools showMessageWithTitle:@"提示" content:[NSString stringWithFormat:@"返回数据非json:%@",error.localizedDescription] buttonTitles:@[@"确定"] clickedHandle:nil];
                 }else {
-                    handle(content,YES);
+                    handle(content);
                 }
             }else {
                 [BQTools showMessageWithTitle:@"提示" content:[self getStringMessageFromErrorInfo:error] buttonTitles:@[@"确定"] clickedHandle:nil];
-                handle(data, NO);
+                handle(data);
             }
         });
     }];
@@ -102,7 +101,7 @@ static CGFloat const timeOutInterval = 15.0f;
                  picBlock:(NSDictionary *_Nullable(^_Nullable)())picBlock
               netWorkType:(NetWorkType)netWorkType
              hasAnimation:(BOOL)hasAnimation
-         compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle {
+         compeletedHandle:(void(^_Nullable)(id _Nullable content))handle {
     if (hasAnimation == YES) {
         [BQActivityView showActiviTy];
     }
@@ -119,14 +118,13 @@ static CGFloat const timeOutInterval = 15.0f;
                 NSError *error;
                 id content = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
                 if (error) {
-                    NSLog(@"数据json转化错误:%@",error.localizedDescription);
-                    handle(data, YES);
+                    [BQTools showMessageWithTitle:@"提示" content:[NSString stringWithFormat:@"返回数据非json:%@",error.localizedDescription] buttonTitles:@[@"确定"] clickedHandle:nil];
                 }else {
-                    handle(content,YES);
+                    handle(content);
                 }
             }else {
                 [BQTools showMessageWithTitle:@"提示" content:[self getStringMessageFromErrorInfo:error] buttonTitles:@[@"确定"] clickedHandle:nil];
-                handle(data, NO);
+                handle(data);
             }
         });
     }] resume];

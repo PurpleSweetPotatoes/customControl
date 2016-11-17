@@ -95,10 +95,6 @@
 @end
 
 
-
-
-#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-
 @implementation UINavigationBar (Awesome)
 static char overlayKey;
 

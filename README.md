@@ -89,14 +89,18 @@ customControl
   
 ![xiaoguo.gif](http://oblos8tvd.bkt.clouddn.com/xiaoguo.gif)
 ####新添加UIButton UITableView UIImageView类目
+
+
 一句代码完成button视图及文本的布局
 
-    [btn adjustLabAndImageLocation:BQBtnLocationType_imageTopLabBottom];
+    [btn adjustLabAndImageLocation:BQBtnLocationType_imageTopLabBottom];
 
 一句代码完成ImageView的展示及手势操作
 
     [imageView canShowImage];
     
 TableView类目默认添加无数据占位图,如需关闭占位图只需要调用closeHolderImage方法即可
+
+
 后期有新的封装会持续加入，若代码中有何不妥之处欢迎指出。
 

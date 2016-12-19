@@ -9,10 +9,6 @@
 #import "UIImageView+Show.h"
 
 
-@interface UIImageView ()<UIGestureRecognizerDelegate>
-
-@end
-
 @interface BQShowImageView : UIView
 /**  图片视图 */
 @property (nonatomic, strong) UIImageView *imageView;

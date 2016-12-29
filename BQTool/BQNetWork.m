@@ -264,6 +264,10 @@ static BQActivityView *activiyView;
             CGRect rect = [UIScreen mainScreen].bounds;
             activiyView = [[BQActivityView alloc] initWithFrame:rect];
             activiyView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.2];
+#pragma 背后视图可点击则打开代码
+            //            activiyView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
+            //            activiyView.frame = activiyView.contentView.frame;
+            //            activiyView.contentView.frame = activiyView.bounds;
         }
     });
     activiyView.showTimes += 1;

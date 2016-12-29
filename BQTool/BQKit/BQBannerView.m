@@ -7,6 +7,7 @@
 //
 
 #import "BQBannerView.h"
+#import <UIImageView+WebCache.h>
 
 static const NSTimeInterval  times = 2.0;
 
@@ -21,7 +22,7 @@ static const NSTimeInterval  times = 2.0;
 
 @implementation BQBannerView
 
-- (instancetype)initWithFrame:(CGRect)frame dataSource:(NSArray<UIImage *> *)dataSource
+- (instancetype)initWithFrame:(CGRect)frame dataSource:(NSArray<NSString *> *)dataSource
 {
     self = [self initWithFrame:frame];
     self.dataSource = dataSource;
@@ -110,7 +111,7 @@ static const NSTimeInterval  times = 2.0;
 - (void)imageChage {
     for (NSInteger i = -1; i < 2; ++ i) {
         NSInteger index = (self.currentIndex + i) % self.dataSource.count;
-        self.imageViewArr[i + 1].image = self.dataSource[index];
+        [self.imageViewArr[i + 1] sd_setImageWithURL:[NSURL URLWithString:self.dataSource[index]]];
     }
     self.scrollView.contentOffset = CGPointMake(self.bounds.size.width, 0);
 }

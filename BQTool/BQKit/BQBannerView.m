@@ -7,7 +7,11 @@
 //
 
 #import "BQBannerView.h"
+#import "BQTools.h"
+
+#ifdef UIImageView
 #import <UIImageView+WebCache.h>
+#endif
 
 static const NSTimeInterval  times = 2.0;
 
@@ -35,6 +39,9 @@ static const NSTimeInterval  times = 2.0;
     if (self) {
         [self initData];
         [self initUI];
+#ifndef UIImageView
+        [BQTools showMessageWithTitle:@"提示" content:@"需要配置SDWebImage库支持!"];
+#endif
     }
     return self;
 }
@@ -109,11 +116,13 @@ static const NSTimeInterval  times = 2.0;
     [self imageChage];
 }
 - (void)imageChage {
+#ifdef UIImageView
     for (NSInteger i = -1; i < 2; ++ i) {
         NSInteger index = (self.currentIndex + i) % self.dataSource.count;
         [self.imageViewArr[i + 1] sd_setImageWithURL:[NSURL URLWithString:self.dataSource[index]]];
     }
     self.scrollView.contentOffset = CGPointMake(self.bounds.size.width, 0);
+#endif
 }
 - (void)bannerViewClickEvent:(void (^)(NSInteger))clickBlock {
     self.clickBlock = clickBlock;

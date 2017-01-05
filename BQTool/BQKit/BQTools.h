@@ -9,12 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface BQTools : NSObject
-/**  消息展示带按钮事件 */
+/**  系统消息展示 */
++ (void)showMessageWithTitle:(NSString * _Nullable)title
+                     content:(NSString * _Nullable)content;
+/**  系统消息展示带按钮事件 */
 + (void)showMessageWithTitle:(NSString * _Nullable)title
                      content:(NSString * _Nullable)content
                 buttonTitles:(NSArray <NSString *> * _Nullable)titles
                clickedHandle:(void(^ _Nullable)(NSInteger index))clickedBtn;
-/**  消息展示带按钮事件、完成事件 */
+/**  系统消息展示带按钮事件、完成事件 */
 + (void)showMessageWithTitle:(NSString * _Nullable)title
                      content:(NSString * _Nullable)content
                 buttonTitles:(NSArray <NSString *> * _Nullable)titles

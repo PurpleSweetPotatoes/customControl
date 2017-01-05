@@ -13,7 +13,27 @@
 static CGFloat const timeOutInterval = 15.0f;
 
 @implementation BQNetWork
-
++ (void)getDataWithUrl:(NSString *_Nullable)urlString
+             parameter:(NSDictionary *_Nullable)parameter
+      compeletedHandle:(void(^_Nullable)(id _Nullable content))handle {
+    [self asyncDataWithUrl:urlString parameter:parameter netWorkType:netWorkTypeGet compeletedHandle:handle];
+}
++ (void)postDataWithUrl:(NSString *_Nullable)urlString
+              parameter:(NSDictionary *_Nullable)parameter
+       compeletedHandle:(void(^_Nullable)(id _Nullable content))handle {
+    [self asyncDataWithUrl:urlString parameter:parameter netWorkType:netWorkTypePost compeletedHandle:handle];
+}
+/**  带指示器的网络请求 */
++ (void)animationGetDataWithUrl:(NSString *_Nullable)urlString
+                      parameter:(NSDictionary *_Nullable)parameter
+               compeletedHandle:(void(^_Nullable)(id _Nullable content))handle {
+    [self asyncDataAnimationWithUrl:urlString parameter:parameter netWorkType:netWorkTypeGet compeletedHandle:handle];
+}
++ (void)animationPostDataWithUrl:(NSString *_Nullable)urlString
+                       parameter:(NSDictionary *_Nullable)parameter
+                compeletedHandle:(void(^_Nullable)(id _Nullable content))handle {
+    [self asyncDataAnimationWithUrl:urlString parameter:parameter netWorkType:netWorkTypePost compeletedHandle:handle];
+}
 + (void)asyncDataWithUrl:(NSString *_Nullable)urlString
                parameter:(NSDictionary *_Nullable)parameter
              netWorkType:(NetWorkType)netWorkType

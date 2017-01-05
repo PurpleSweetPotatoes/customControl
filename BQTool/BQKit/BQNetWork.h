@@ -17,19 +17,20 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
  *  网络请求类(只处理json数据) 可选使用等待指示器
  */
 @interface BQNetWork : NSObject
-
-/**  网络请求 */
-+ (void)asyncDataWithUrl:(NSString *_Nullable)urlString
-               parameter:(NSDictionary *_Nullable)parameter
-             netWorkType:(NetWorkType)netWorkType
-        compeletedHandle:(void(^_Nullable)(id _Nullable content))handle;
-
 /**  带指示器的网络请求 */
-+ (void)asyncDataAnimationWithUrl:(NSString *_Nullable)urlString
-                        parameter:(NSDictionary *_Nullable)parameter
-                      netWorkType:(NetWorkType)netWorkType
-                 compeletedHandle:(void(^_Nullable)(id _Nullable content))handle;
-
++ (void)getDataWithUrl:(NSString *_Nullable)urlString
+             parameter:(NSDictionary *_Nullable)parameter
+      compeletedHandle:(void(^_Nullable)(id _Nullable content))handle;
++ (void)postDataWithUrl:(NSString *_Nullable)urlString
+              parameter:(NSDictionary *_Nullable)parameter
+       compeletedHandle:(void(^_Nullable)(id _Nullable content))handle;
+/**  带指示器的网络请求 */
++ (void)animationGetDataWithUrl:(NSString *_Nullable)urlString
+             parameter:(NSDictionary *_Nullable)parameter
+      compeletedHandle:(void(^_Nullable)(id _Nullable content))handle;
++ (void)animationPostDataWithUrl:(NSString *_Nullable)urlString
+                      parameter:(NSDictionary *_Nullable)parameter
+               compeletedHandle:(void(^_Nullable)(id _Nullable content))handle;
 /**  可配置请求头的网络请求 */
 + (void)asyncDataWithUrl:(NSString *_Nullable)urlString
                parameter:(NSDictionary *_Nullable)parameter

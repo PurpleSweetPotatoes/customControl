@@ -10,7 +10,12 @@
 #import <objc/runtime.h>
 
 @implementation BQTools
-
++ (void)showMessageWithTitle:(NSString *)title content:(NSString *)content {
+    [self showMessageWithTitle:title content:content handle:nil];
+}
++ (void)showMessageWithTitle:(NSString *)title content:(NSString *)content handle:(void (^)())clickedBtn {
+    [self showMessageWithTitle:title content:content buttonTitles:@[@"确定"] clickedHandle:clickedBtn];
+}
 + (void)showMessageWithTitle:(NSString *)title
                      content:(NSString *)content
                 buttonTitles:(NSArray<NSString *> *)titles

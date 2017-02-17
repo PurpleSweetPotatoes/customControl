@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BQPopView : UIView
+@interface BQMsgView : UIView
 
 + (void)showInfo:(NSString *)info;
 

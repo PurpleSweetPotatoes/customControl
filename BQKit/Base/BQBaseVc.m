@@ -8,6 +8,7 @@
 
 #import "BQBaseVc.h"
 #import <objc/runtime.h>
+#import "BQTools.h"
 
 #define AppMainColor [UIColor cyanColor]
 
@@ -30,12 +31,8 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.isHideBar = NO;
     self.addHeight = 0;
-    CGFloat width = [UIScreen mainScreen].bounds.size.width;
-    CGFloat height = [UIScreen mainScreen].bounds.size.height;
-    self.contentView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, width, height - 64)];
+    self.contentView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64)];
     self.contentView.bounces = NO;
-    self.contentView.showsHorizontalScrollIndicator = NO;
-    self.contentView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.contentView];
     self.contentView.contentSize = self.contentView.bounds.size;
     //返回按钮
@@ -86,7 +83,11 @@
         }
     }
     contentHeight += self.addHeight;
-    self.contentView.contentSize = CGSizeMake(self.contentView.bounds.size.width, self.contentView.bounds.size.height > contentHeight ? self.contentView.bounds.size.height : contentHeight);
+    
+    if (contentHeight > self.contentView.bounds.size.height) {
+       self.contentView.contentSize = CGSizeMake(self.contentView.bounds.size.width, contentHeight);
+    }
+    
 }
 #pragma mark - Btn Action
 - (void)leftBarItemAction:(UIBarButtonItem *) barItem {

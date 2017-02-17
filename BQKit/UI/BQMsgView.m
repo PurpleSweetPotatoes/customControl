@@ -6,9 +6,9 @@
 //  Copyright © 2016年 MAC. All rights reserved.
 //
 
-#import "BQPopView.h"
+#import "BQMsgView.h"
 
-@interface BQPopView ()
+@interface BQMsgView ()
 /** 标题内容 */
 @property (nonatomic, copy) NSString * title;
 /** 内容 */
@@ -17,7 +17,7 @@
 @property (nonatomic, strong) UIView * anmationView;
 @end
 
-@implementation BQPopView
+@implementation BQMsgView
 #pragma mark - Class Method
 + (void)showInfo:(NSString *)info {
     [self showTitle:nil info:info];
@@ -29,7 +29,7 @@
     [self showTitle:title info:info completeBlock:nil];
 }
 + (void)showTitle:(NSString *)title info:(NSString *)info completeBlock:(void (^)())callblock {
-    BQPopView * popView = [[BQPopView alloc] initWithFrame:[UIScreen mainScreen].bounds title:title info:info] ;
+    BQMsgView * popView = [[BQMsgView alloc] initWithFrame:[UIScreen mainScreen].bounds title:title info:info] ;
     [[UIApplication sharedApplication].keyWindow addSubview:popView];
     popView.anmationView.transform = CGAffineTransformScale(popView.anmationView.transform, 1.1, 1.1);
     [UIView animateWithDuration:0.15f animations:^{

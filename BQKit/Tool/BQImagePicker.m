@@ -266,7 +266,6 @@
                     self.imageView.frame = frame;
                 }];
             }
-            
         }
     }
     // 缩放

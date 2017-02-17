@@ -17,10 +17,14 @@
 /**
  左侧按钮点击事件
  */
-- (void)leftBarItemAction:(UIBarButtonItem *)barItem;
+- (void)leftBarItemAction:(UIBarButtonItem *)barItem __attribute__((objc_requires_super));
 
 - (void)HideNavgationBar;
 
+/**
+ 调整contentView的显示高度
+ */
+- (void)layoutContentView;
 /**
  当控制器有标签栏的时候调用此方法
  */

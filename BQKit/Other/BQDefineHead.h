@@ -6,11 +6,6 @@
 //  Copyright © 2016年 白强. All rights reserved.
 //
 
-/** ---------------- 子线程执行block ---------------  */
-#define async(block) dispatch_async(dispatch_get_global_queue(0, 0), ^{ block })
-
-/** ---------------- 主线程执行block ---------------  */
-#define sync(block) dispatch_async(dispatch_get_main_queue(), ^{ block })
 /** ---------------- 屏幕宽高 ---------------  */
 #define Screen_Widht [UIScreen mainScreen].bounds.size.width
 #define Screen_height [UIScreen mainScreen].bounds.size.height

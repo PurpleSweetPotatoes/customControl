@@ -1,5 +1,6 @@
-customControl
-========
+
+
+
 ####关于代码
 这些代码为从学习iOS来到现在实际项目开发中，精炼出来的封装代码,使用相对简单，由于所做的项目开发难度相对较小，所以这里封装的一些都属于常用的小工具。希望能给大家带来便利。下面是几个具体封装类的使用方法
 ####BQScreenAdaptation.h
@@ -13,28 +14,24 @@ customControl
     #define IPHONE_WIDTH 375
     在此类中添写View和CALayer的类目，可以用top、left、right、bottom等访问对应的orign.x、orign.y、width、height等属性
 ####BQNetWork.h
-网络请求类,笔者个人封装的网络请求，使用简单方便。功能不如AFNetwork强大，但胜在简便，轻量。使用方法如下所示
+网络请求类,笔者个人封装的网络请求，使用简单方便。功能不如AFNetwork强大，但胜在简便，轻量。修复后台'+'被识别为' '的bug，具体使用方法如下所示
 
-    /**  网络请求 */
-    + (void)asyncDataWithUrl:(NSString *_Nullable)urlString
-               parameter:(NSDictionary *_Nullable)parameter
-             netWorkType:(NetWorkType)netWorkType
-            hasAnimation:(BOOL)hasAnimation
-        compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
-    /**  可配置请求头的网络请求 */
-    + (void)asyncDataWithUrl:(NSString *_Nullable)urlString
-               parameter:(NSDictionary *_Nullable)parameter
-         headerParameter:(NSDictionary *_Nullable)headerParameter
-             netWorkType:(NetWorkType)netWorkType
-            hasAnimation:(BOOL)hasAnimation
-        compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;
+    + (void)postUrl:(NSString *_Nullable)urlString
+         parameter:(NSDictionary *_Nullable)parameter
+         compeleted:(void(^_Nullable)(id _Nullable content))handle;
+
+    + (void)getUrl:(NSString *_Nullable)urlString
+         parameter:(NSDictionary *_Nullable)parameter
+        compeleted:(void(^_Nullable)(id _Nullable content))handle;
+    /** 配置请求头设置 */
+    + (void)configHttpHearders:(NSDictionary * _Nullable)hearders;
+
     /**  上传头像请求 block回传字典格式必须为@{"key":图片对应key值,"name":上传到服务器名字,"data":图片data数据} */
     + (void)postUploadWithUrl:(NSString *_Nullable)urlString
                 parameter:(NSDictionary *_Nullable)parameter
                  picBlock:(NSDictionary *_Nullable(^_Nullable)())picBlock
-              netWorkType:(NetWorkType)netWorkType
-             hasAnimation:(BOOL)hasAnimation
-         compeletedHandle:(void(^_Nullable)(id _Nullable content,BOOL success))handle;     
+               compeleted:(void(^_Nullable)(id _Nullable content))handle;    
+
 ####BQImagePicker
 图片选择器，自动判断是否支持照相功能
 
@@ -42,65 +39,54 @@ customControl
     [BQImagePicker showPickerImageWithClipType:ClipSizeTypeTwoScaleOne handleImage:^(UIImage *image) {
         NSLog(@"%@",image);
     }];
+
+####BQModel.h
+利用runtime动态加载属性值和输出成员变量，示例如下
+
+    NSDictionary * dict = @{@"name":@"张三",@"test":@"测试",@"地址":@"仁寿",@"sex":@"man",@"dict":@{@"1":@"a"}};
+    UserModel * model = [UserModel mallocWithDict:dict];
+    NSLog(@"%@",model);
+
+![结果图](http://oblos8tvd.bkt.clouddn.com/customControl-jieguotu-1.png)
 ####BQTools
-    /**  消息展示带按钮事件 */
+主要方法如下
+
+    /**  警告消息展示 */
+    + (void)showMessageWithTitle:(NSString * _Nullable)title
+                         content:(NSString * _Nullable)content;
+    /**  警告消息展示，带点击回调 */
     + (void)showMessageWithTitle:(NSString * _Nullable)title
                          content:(NSString * _Nullable)content
-                    buttonTitles:(NSArray <NSString *> * _Nullable)titles
-                clickedHandle:(void(^ _Nullable)(NSInteger index))clickedBtn;
-    /**  消息展示带按钮事件、完成事件 */
-    + (void)showMessageWithTitle:(NSString * _Nullable)title
-                         content:(NSString * _Nullable)content
-                    buttonTitles:(NSArray <NSString *> * _Nullable)titles
-                   clickedHandle:(void(^ _Nullable)(NSInteger index))clickedBtn
-                compeletedHandle:(void(^ _Nullable)())handle;
-    /**  归档处理操作 */
-    + (void)encodeWithObject:(NSObject * _Nullable)encodeObject 
-                   withcoder:(NSCoder * _Nullable)aCoder;
-    /**  解档处理操 */
-    + (void)unencodeWithObject:(NSObject * _Nullable)unarchObject 
-                     withcoder:(NSCoder * _Nullable)aDecoder;
-    /**  将对象转化为字符串 */
-    + (NSString * _Nullable)jsonStringWithObject:(id _Nullable)object;
-    /**  将字典值转化为String类型 */
+                   handle:(void(^ _Nullable)())clickedBtn;
+    /**  将字典值转化为String类型 防止数据类型错误抛出异常 */
     + (NSMutableDictionary * _Nullable)valuesForamtToStringWithDict:(NSDictionary * _Nullable)dict;
-    /**  将数组值转化为String类型 */
+    /**  将数组值转化为String类型 防止数据类型错误抛出异常 */
     + (NSMutableArray * _Nullable)valuesForamtToStringWithArray:(NSArray * _Nullable)array;
-    /**  获取当前控制器 */
-    + (UIViewController * _Nullable)currentViewController;
-    /**  获取当前APP版本号 */
-    + (NSString * _Nullable)currentSystemVersion;
-    /**  获取APP的标示符 */
-    + (NSString * _Nullable)currentBundleIdentifier;
     /**  利用钥匙串保存数据 */
     + (BOOL)saveKeychainWithData:(NSData * _Nullable)data;
     /**  加载钥匙串数据 */
     + (NSData * _Nullable)loadKeyChainValue;
-    /**  删除钥匙串数据 */
-    + (BOOL)deleteKeyChainValue;
     /**  随机色 */
     + (UIColor * _Nullable)randomColor;
-####BQPopView
-仿照UIAlertView界面所写提示框，在展示后自动消失。不影响控制器的跳转
-####NSString+safe.h
-关于NSString加密解密处理的方法类目,包含有MD5和SHA散列加密，另含NSSrring和NSData的Base64加密解密
-####BQKit
-其中BQWeakProxy和BQFPSLabel为模仿YYKit所写的虚拟代理类和帧数检测类，用以防止循环引用所和检测刷新频率使用。BQTextFieldView为所写的一个文本框视图，效果图如下
-  
-![xiaoguo.gif](http://oblos8tvd.bkt.clouddn.com/xiaoguo.gif)
-####新添加UIButton UITableView UIImageView类目
+####BQMsgView
+仿照Android提示框所写(老板要求iOS与android界面一样😢)，在展示后自动消失。不影响控制器的跳转
+####NSString+Conversion.h
+关于NSString编码处理的方法类目,包含有MD5和Base64、AES、SHA等加密编码方式
 
+####UIButton UIImageView类目
 
 一句代码完成button视图及文本的布局
 
-    [btn adjustLabAndImageLocation:BQBtnLocationType_imageTopLabBottom];
+    [btn adjustLabAndImageLocation:BtnEdgeType_imageTopLabBottom];
 
-一句代码完成ImageView的展示及手势操作
+一句代码完成UIImageView的展示及手势操作
 
     [imageView canShowImage];
-    
-TableView类目默认添加无数据占位图,如需关闭占位图只需要调用closeHolderImage方法即可
 
+####其他
+其中BQWeakProxy和BQFPSLabel为模仿YYKit所写的虚拟代理类和帧数检测类，用以防止循环引用所和检测刷新频率使用。BQTextFieldView为所写的一个文本框视图，效果图如下
+  
+![xiaoguo.gif](http://oblos8tvd.bkt.clouddn.com/xiaoguo.gif)
 
 后期有新的封装会持续加入，若代码中有何不妥之处欢迎指出。
 

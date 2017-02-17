@@ -9,5 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface BQModel : NSObject
++ (NSMutableArray *)mallocWithArray:(NSArray<NSDictionary *> *)array;
 + (instancetype)mallocWithDict:(NSDictionary *)infoDict __attribute__((objc_requires_super));
 @end

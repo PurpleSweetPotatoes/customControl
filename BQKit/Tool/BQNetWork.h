@@ -16,6 +16,7 @@
 + (void)postUrl:(NSString *_Nullable)urlString
       parameter:(NSDictionary *_Nullable)parameter
      compeleted:(void(^_Nullable)(id _Nullable content))handle;
+
 + (void)getUrl:(NSString *_Nullable)urlString
      parameter:(NSDictionary *_Nullable)parameter
     compeleted:(void(^_Nullable)(id _Nullable content))handle;

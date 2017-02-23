@@ -35,37 +35,46 @@ static NSString *const WeChatPayHttpRequestUrl = @"https://api.mch.weixin.qq.com
         [WXApi handleOpenURL:url delegate:[BQPay sharedSNPay]];
     }
 }
-+ (void)payWithOrderDict:(NSDictionary *)orderDict callBlock:(void (^)(NSError *))block {
++ (void)payWithOrderDict:(NSDictionary *)orderDict {
+    if (![self checkAppWithRegiestStr:orderDict[@""]]) {
+        return;
+    }
     PayReq *request = [[PayReq alloc] init];
-    request.openID = [orderDict objectForKey:@"appid"];
-    request.partnerId = [orderDict objectForKey:@"mch_id"];
-    request.prepayId = [orderDict objectForKey:@"prepay_id"];
     request.package = @"Sign=WXPay";
-    request.nonceStr = [orderDict objectForKey:@"nonce_str"];
 #warning 具体字段key根据服务器返回为准
-    request.timeStamp = [orderDict[@"timestamp"] intValue];
-    request.sign = [orderDict objectForKey:@"paySign"];;
+    request.openID = orderDict[@""];
+    request.partnerId = orderDict[@""];
+    request.prepayId = orderDict[@""];
+    request.nonceStr = orderDict[@""];
+    request.timeStamp = [orderDict[@""] intValue];
+    request.sign = orderDict[@""];
     // 调用微信
     [WXApi sendReq:request];
 }
-+ (void)payWithMoney:(NSString *)money orderId:(NSString *)orderId title:(NSString *)title desc:(NSString *)desc notiUrl:(NSString *)url callBlock:(void (^)(NSError *))block {
++ (void)payWithMoney:(NSString *)money orderId:(NSString *)orderId title:(NSString *)title desc:(NSString *)desc {
+    if (![self checkAppWithRegiestStr:APP_ID]) {
+        return;
+    }
+    //微信支付金额单位为分
+    money = [NSString stringWithFormat:@"%d",[money intValue] * 100];
+    NSMutableDictionary *signDic = [self buildSignDictionaryWithAppId:APP_ID mchId:MCH_ID desc:desc price:money notiUrl:WeChatNotiUrl orderId:orderId];
+    NSString *xml = [self buildRequestXMLWithDic:signDic];
+    
+    [[self new] requestPayInfoWithXml:xml];
+}
++ (BOOL)checkAppWithRegiestStr:(NSString *)regiestStr {
     //注册微信SDK
     if (![BQPay sharedSNPay].wechatSDKIsRegiest) {
         [BQPay sharedSNPay].wechatSDKIsRegiest = YES;
-        [WXApi registerApp:APP_ID withDescription:[NSBundle mainBundle].bundleIdentifier];
+        [WXApi registerApp:regiestStr withDescription:[NSBundle mainBundle].bundleIdentifier];
     }
     //检查微信是否安装
     if (![WXApi isWXAppInstalled]) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"支付失败" message:@"请先安装微信客户端" delegate:nil cancelButtonTitle:@"好" otherButtonTitles:nil];
         [alertView show];
-        return;
+        return NO;
     }
-    //微信支付金额单位为分
-    money = [NSString stringWithFormat:@"%d",[money intValue] * 100];
-    NSMutableDictionary *signDic = [self buildSignDictionaryWithAppId:APP_ID mchId:MCH_ID desc:desc price:money notiUrl:url orderId:orderId];
-    NSString *xml = [self buildRequestXMLWithDic:signDic];
-    
-    [[self new] requestPayInfoWithXml:xml];
+    return YES;
 }
 //请求统一支付
 - (void)requestPayInfoWithXml:(NSString *)xml {

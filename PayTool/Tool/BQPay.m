@@ -8,6 +8,7 @@
 
 #import "BQPay.h"
 #import "BQAliPay.h"
+#import "BQWeChatPay.h"
 
 @implementation BQPay
 static BQPay * _instance;
@@ -34,18 +35,19 @@ static BQPay * _instance;
     [BQAliPay handleOpenUrl:url];
 }
 + (void)payWithType:(PayWay)type content:(id)content callBlock:(void (^)(NSError *))block {
-    _instance.callBlock = block;
+    [BQPay sharedSNPay].callBlock = block;
     if (type == AliPay) {
-        [BQAliPay payWithOrderString:content callBlock:block];
+        [BQAliPay payWithOrderString:content];
     }else {
-        
+        [BQWeChatPay payWithOrderDict:content];
     }
 }
 + (void)payWithType:(PayWay)type money:(NSString *)money orderId:(NSString *)orderId title:(NSString *)title desc:(NSString *)desc notiUrl:(NSString *)url callBlock:(void (^)(NSError *))block {
+    [BQPay sharedSNPay].callBlock = block;
     if (type == AliPay) {
-        [BQAliPay payWithMoney:money orderId:orderId title:title desc:desc notiUrl:url callBlock:block];
+        [BQAliPay payWithMoney:money orderId:orderId title:title desc:desc];
     }else {
-        
+        [BQWeChatPay payWithMoney:money orderId:orderId title:title desc:desc];
     }
 }
 + (NSError *)buildErrorWithCode:(NSInteger)code msg:(NSString *)msg {
@@ -53,24 +55,22 @@ static BQPay * _instance;
 }
 #pragma mark - wechatDelegate
 - (void)onResp:(BaseResp *)resp {
-    BQPay * pay = _instance;
+    void (^block)(NSError *) = [BQPay sharedSNPay].callBlock;
+    NSLog(@"WeChatPay ===>  code = %d, content = %@",resp.errCode, resp.errStr);
+    if (!block) {
+        return;
+    }
     if ([resp isKindOfClass:[PayResp class]]) {
         switch (resp.errCode) {
             case WXSuccess:
-                if (pay.callBlock) {
-                    pay.callBlock(nil);
-                }
+                block(nil);
                 break;
             default:
-                if (pay.callBlock) {
-                    pay.callBlock([BQPay buildErrorWithCode:resp.errCode msg:resp.errStr]);
-                }
+                block([BQPay buildErrorWithCode:resp.errCode msg:resp.errStr]);
                 break;
         }
     }else {
-        if (pay.callBlock) {
-            pay.callBlock([BQPay buildErrorWithCode:404 msg:@"支付类型错误"]);
-        }
+        block([BQPay buildErrorWithCode:404 msg:@"支付类型错误"]);
     }
 }
 @end

@@ -13,45 +13,45 @@
 
 @implementation BQAliPay
 + (void)handleOpenUrl:(NSURL *)url {
-    if ([url.scheme isEqualToString:AlipayScheme]) {
-        if ([url.host isEqualToString:@"safepay"]) {
-            [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback: ^(NSDictionary *resultDic) {
-                //APP支付结果回调
-                BQPay *pay = [BQPay sharedSNPay];
-                NSString *resStr = resultDic[@"memo"];
-                NSInteger resCode = [resultDic[@"resultStatus"] integerValue];
-                NSString *errorMsg = resCode != 9000 ? resStr : nil;
-                if (pay.callBlock) {
-                    if (resCode == 9000) {
-                        pay.callBlock(nil);
-                    }
-                    else {
-                        pay.callBlock([BQPay buildErrorWithCode:resCode msg:errorMsg]);
-                    }
-                }
-            }];
-        }
-    }
-}
-+ (void)payWithOrderString:(NSString *)orderString callBlock:(void (^)(NSError *))block {
-    if (orderString != nil) {
-        [[AlipaySDK defaultService] payOrder:orderString fromScheme:AlipayScheme callback: ^(NSDictionary *resultDic) {
-            //网页支付结果回调
-            NSString *statuCode = resultDic[@"resultStatus"];
-            if ([statuCode isEqualToString:@"9000"]) {
-                //支付成功
-                if (block) {
+//    [url.scheme isEqualToString:AlipayScheme]
+    if ([url.host isEqualToString:@"safepay"]) {
+        [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback: ^(NSDictionary *resultDic) {
+            //APP支付结果回调
+            void (^block)(NSError *) = [BQPay sharedSNPay].callBlock;
+            NSString *resStr = resultDic[@"memo"];
+            NSInteger resCode = [resultDic[@"resultStatus"] integerValue];
+            NSString *errorMsg = resCode != 9000 ? resStr : nil;
+            if (block) {
+                if (resCode == 9000) {
                     block(nil);
                 }
-            }else {
-                if (block) {
-                    block([BQPay buildErrorWithCode:statuCode.integerValue msg:resultDic[@"memo"]]);
+                else {
+                    block([BQPay buildErrorWithCode:resCode msg:errorMsg]);
                 }
             }
         }];
     }
 }
-+ (void)payWithMoney:(NSString *)money orderId:(NSString *)orderId title:(NSString *)title desc:(NSString *)desc notiUrl:(NSString *)url callBlock:(void (^)(NSError *))block {
++ (void)payWithOrderString:(NSString *)orderString {
+    if (orderString != nil) {
+        [[AlipaySDK defaultService] payOrder:orderString fromScheme:AlipayScheme callback: ^(NSDictionary *resultDic) {
+            //网页支付结果回调
+            void (^block)(NSError *) = [BQPay sharedSNPay].callBlock;
+            NSLog(@"AliPay ===> resultDic = %@", resultDic);
+            if (!block) {
+                return;
+            }
+            NSString *statuCode = resultDic[@"resultStatus"];
+            if ([statuCode isEqualToString:@"9000"]) {
+                //支付成功
+                block(nil);
+            }else {
+                block([BQPay buildErrorWithCode:statuCode.integerValue msg:resultDic[@"memo"]]);
+            }
+        }];
+    }
+}
++ (void)payWithMoney:(NSString *)money orderId:(NSString *)orderId title:(NSString *)title desc:(NSString *)desc {
     if ([AliPayAppID length] == 0 ||
         ([rsa2PrivateKey length] == 0 && [rsaPrivateKey length] == 0))
     {
@@ -64,23 +64,14 @@
      */
     //将商品信息赋予AlixPayOrder的成员变量
     Order* order = [Order new];
-    
-    // NOTE: app_id设置
     order.app_id = AliPayAppID;
-    
-    // NOTE: 支付接口名称
     order.method = @"alipay.trade.app.pay";
-    
-    // NOTE: 参数编码格式
     order.charset = @"utf-8";
-    
-    // NOTE: 当前时间点
     NSDateFormatter* formatter = [NSDateFormatter new];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     order.timestamp = [formatter stringFromDate:[NSDate date]];
-    
-    // NOTE: 支付版本
     order.version = @"1.0";
+    order.notify_url = AliPayNotiUrl;
     
     // NOTE: sign_type 根据商户设置的私钥来决定
     order.sign_type = (rsa2PrivateKey.length > 1)?@"RSA2":@"RSA";
@@ -111,7 +102,7 @@
         // 将签名成功字符串格式化为订单字符串
         NSString *orderString = [NSString stringWithFormat:@"%@&sign=%@",
                                  orderInfoEncoded, signedString];
-        [self payWithOrderString:orderString callBlock:block];
+        [self payWithOrderString:orderString];
     }
 }
 @end

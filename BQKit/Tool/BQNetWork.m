@@ -9,6 +9,7 @@
 
 #import "BQNetWork.h"
 #import "BQTools.h"
+#import "Reachability.h"
 
 static CGFloat const timeOutInterval = 15.0f;
 static NSDictionary * _hearders;
@@ -59,6 +60,12 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
 
 + (void)asyncDataWithRequest:(NSMutableURLRequest *)request
             compeletedHandle:(void (^)(id _Nullable))handle {
+    if (![self isExistenceNetwork]) {
+        NSLog(@"当前网络无法链接上Internet");
+        return;
+    }
+    
+    
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [self loadData:data response:response error:error handle:handle];
@@ -95,6 +102,7 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
     });
 }
 + (NSMutableURLRequest *)configPostImageURLWithString:(NSString *)string parameters:(NSDictionary *)parameters picBlock:(NSDictionary *_Nullable(^_Nullable)())picBlock {
+    NSLog(@"******* 网络请求 *******\nurl: %@\nparams: %@",string, parameters);
     //分界线的标识符
     NSString *TWITTERFON_FORM_BOUNDARY = @"boundary";
     //根据url初始化request
@@ -213,5 +221,20 @@ typedef NS_ENUM(NSUInteger, NetWorkType) {
             break;
     }
     return message;
+}
+#pragma mark - 网络畅通判断
++ (BOOL)isExistenceNetwork
+{
+    BOOL isExistenceNetwork;
+    Reachability *reachability = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    switch([reachability currentReachabilityStatus]){
+            case NotReachable: isExistenceNetwork = FALSE;
+            break;
+            case ReachableViaWWAN: isExistenceNetwork = TRUE;
+            break;
+            case ReachableViaWiFi: isExistenceNetwork = TRUE;
+            break;
+    }
+    return isExistenceNetwork;
 }
 @end

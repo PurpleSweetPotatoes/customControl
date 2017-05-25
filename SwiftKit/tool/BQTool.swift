@@ -52,6 +52,12 @@ class BQTool: NSObject {
         }
     return vc
     }
+    class func getFuntionUseTime(function:()->()) {
+        let start = CACurrentMediaTime()
+        function()
+        let end = CACurrentMediaTime()
+        Log("方法耗时为：\(end-start)")
+    }
     class func pwdEncryt(pwd:String) -> String {
         let base64 = pwd.data(using: .utf8)?.base64EncodedString()
         let lenght = base64?.characters.count

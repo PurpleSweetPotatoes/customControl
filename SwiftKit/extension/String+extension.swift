@@ -22,6 +22,18 @@ var Regular_CardId = "^((1[1-5])|(2[1-3])|(3[1-7])|(4[1-6])|(5[0-4])|(6[1-5])|71
 var Regular_IPAdrress = "^\\d{0,3}\\.\\d{0,3}.\\d{0,3}.\\d{0,3}$"
 
 extension String {
+    func isPhone() -> Bool {
+        return self =~ Regular_Phone
+    }
+    func isEmail() -> Bool {
+        return self =~ Regular_Email
+    }
+    func isCard() -> Bool {
+        return self =~ Regular_CardId
+    }
+    func isIPAddress() -> Bool{
+        return self =~ Regular_IPAdrress
+    }
     //正则表达判断,lhs:字符串,rhs:正则式
     static func =~(lhs: String, rhs: String) -> Bool {
         do {

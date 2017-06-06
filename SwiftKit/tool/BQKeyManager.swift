@@ -11,7 +11,6 @@ private let shareManager = BQKeyManager()
 class BQKeyManager: NSObject {
     private var isRegister = false
     private var currentTF: UIView!
-    private var oldFrame: CGRect = UIScreen.main.bounds
     private var viewBottom: CGFloat = 0
     private var keyBoardOrigiY: CGFloat = 0
     private var forntOrigiY: CGFloat = 0
@@ -57,17 +56,16 @@ class BQKeyManager: NSObject {
         let keyView = UIApplication.shared.keyWindow?.rootViewController?.view
         if self.keyBoardOrigiY < self.viewBottom {
             self.forntOrigiY = self.keyBoardOrigiY
-            keyView?.frame = self.oldFrame
             UIView.animate(withDuration: 0.3, animations: {
-                keyView?.frame = CGRect(origin: CGPoint(x: self.oldFrame.origin.x, y: self.keyBoardOrigiY - self.viewBottom), size: self.oldFrame.size)
+                keyView?.frame = CGRect(origin: CGPoint(x: 0, y: self.keyBoardOrigiY - self.viewBottom), size: UIScreen.main.bounds.size)
             });
             self.keyBoardOrigiY = 0
-            self.viewBottom = 0
-        }
-        if self.forntOrigiY != 0 && self.forntOrigiY < self.keyBoardOrigiY {
-            UIView.animate(withDuration: 0.25, animations: {
-                keyView?.frame = CGRect(origin: CGPoint(x: self.oldFrame.origin.x, y:self.oldFrame.origin.y + self.keyBoardOrigiY - self.forntOrigiY), size: self.oldFrame.size)
-            });
+        }else {
+            if keyView!.frame != UIScreen.main.bounds {
+                UIView.animate(withDuration: 0.25, animations: {
+                    keyView?.frame = UIScreen.main.bounds
+                })
+            }
         }
     }
     @objc private func keyBoardWillDismiss(notifi:Notification) {
@@ -78,15 +76,12 @@ class BQKeyManager: NSObject {
     }
     @objc private func didBeginEditing(notifi:Notification) {
         self.currentTF = notifi.object as? UIView
-        self.oldFrame = (UIApplication.shared.keyWindow?.rootViewController?.view.frame)!
         let keyView = UIApplication.shared.keyWindow?.rootViewController?.view
-        keyView?.frame = self.oldFrame
         let rect = (self.currentTF?.superview?.convert((self.currentTF?.frame)!, to: keyView))!
         self.viewBottom = rect.maxY
         self.adjustViewHeight()
     }
     @objc private func didEndEditing(notifi:Notification) {
-        self.oldFrame = UIScreen.main.bounds
         self.keyBoardOrigiY = 0
         self.viewBottom = 0
         self.forntOrigiY = 0
@@ -94,11 +89,6 @@ class BQKeyManager: NSObject {
 }
 
 extension UIScrollView {
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.endEditing(true)
-    }
-}
-extension UIView {
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.endEditing(true)
     }

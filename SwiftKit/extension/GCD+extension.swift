@@ -11,6 +11,18 @@ import Foundation
 
 typealias Task = (_ cancel: Bool) -> Void
 extension DispatchQueue {
+    
+    private static var _onceTracker = [String]()
+    public class func once(_ token: String, _ block:()->Void) {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        if _onceTracker.contains(token) {
+            return
+        }
+        _onceTracker.append(token)
+        block()
+    }
+
     class func delay(_ time:TimeInterval, task:@escaping ()->()) -> Task? {
         func dispatch_later(block:@escaping ()->()) {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + time, execute: block)
@@ -31,7 +43,6 @@ extension DispatchQueue {
         }
         return result
     }
-    
     class func cancel(task:Task?) {
         task?(true)
     }

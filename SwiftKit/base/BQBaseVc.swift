@@ -9,7 +9,6 @@
 import UIKit
 
 class BQBaseVc: UIViewController, UINavigationControllerDelegate {
-    
     let contentView = UIScrollView()
     var ishideNavBar = false
     override func viewDidLoad() {

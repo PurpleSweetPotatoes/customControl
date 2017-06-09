@@ -63,6 +63,7 @@ class BQBaseVc: UIViewController, UINavigationControllerDelegate {
     //MARK:- ***** navgationDelegate *****
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         let vc = viewController as! BQBaseVc
+        navigationController.delegate = vc
         self.navigationController?.setNavigationBarHidden(vc.ishideNavBar, animated: true)
     }
 }

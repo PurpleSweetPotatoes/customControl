@@ -18,6 +18,9 @@ class BQBaseVc: UIViewController, UINavigationControllerDelegate {
         self.navigationController?.delegate = self;
         self.view.backgroundColor = UIColor.randomColor
         self.contentView.frame = self.view.bounds
+        if self.navigationController != nil {
+            self.contentView.height = UIScreen.main.bounds.size.height - 64
+        }
         self.contentView.bounces = false
         self.contentView.contentSize = self.contentView.size
         self.contentView.showsVerticalScrollIndicator = false

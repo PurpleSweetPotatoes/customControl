@@ -87,9 +87,3 @@ class BQKeyManager: NSObject {
         self.forntOrigiY = 0
     }
 }
-
-extension UIScrollView {
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.endEditing(true)
-    }
-}

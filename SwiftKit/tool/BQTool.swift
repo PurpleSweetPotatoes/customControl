@@ -10,36 +10,21 @@ import UIKit
 
 
 class BQTool: NSObject {
- 
+    
     //MARK:- ***** 弹出框 *****
-    class func showAlert(content:String) -> Void {
-        self.showAlert(title: "温馨提示", content: content)
-    }
-    class func showAlert(content:String,clickBlock:(() -> Void)?) -> Void {
-        self.showAlert(title: "温馨提示", content: content, btnTitleArr: ["确定"]) { (index) in
-            if clickBlock != nil {
-                clickBlock!()
+    class func showAlert(content:String, title:String? = nil, handle:(() -> ())? = nil) {
+        self.showAlert(content: content, title: title, btnTitleArr: ["确定"]) { (index) in
+            if let block = handle {
+                block()
             }
         }
     }
-    class func showAlert(title:String, content:String) -> Void {
-        self.showAlert(title: title, content: content, btnTitleArr: ["确定"], handle: nil)
-    }
-    class func showAlert(title:String, content:String,clickBlock:(() -> Void)?) -> Void {
-        self.showAlert(title: title, content: content, btnTitleArr: ["确定"]) { (index) in
-            if clickBlock != nil {
-                clickBlock!()
-            }
-        }
-    }
-    class func showAlert(title:String, content:String ,btnTitleArr:Array<String>,handle:((_ index:Int) -> Void)?) -> Void {
+    class func showAlert(content:String, title:String? = nil, btnTitleArr:Array<String>,handle:@escaping ((_ index:Int) -> Void)) {
         let alertVc:UIAlertController = UIAlertController.init(title: title, message: content, preferredStyle: UIAlertControllerStyle.alert);
         for title in btnTitleArr {
             let action:UIAlertAction = UIAlertAction.init(title: title, style: UIAlertActionStyle.default, handler: { (action) in
-                if handle != nil {
-                    let index = btnTitleArr.index(of: action.title!)
-                    handle!(index!)
-                }
+                let index = btnTitleArr.index(of: action.title!)
+                handle(index!)
             })
             alertVc.addAction(action)
         }
@@ -50,44 +35,13 @@ class BQTool: NSObject {
         while let presentVc = vc.presentedViewController {
             vc = presentVc
         }
-    return vc
+        return vc
     }
     class func getFuntionUseTime(function:()->()) {
         let start = CACurrentMediaTime()
         function()
         let end = CACurrentMediaTime()
         Log("方法耗时为：\(end-start)")
-    }
-    class func pwdEncryt(pwd:String) -> String {
-        let base64 = pwd.data(using: .utf8)?.base64EncodedString()
-        let lenght = base64?.characters.count
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MM"
-        let key = formatter.string(from: Date()).md5()
-        let keyLenght = key.characters.count
-        var tempStr = String()
-        var x = 0
-        for _ in 0..<lenght! {
-            if x == keyLenght {
-                x = 0
-            }
-            let index = key.index(key.startIndex, offsetBy: x)
-            tempStr.append(key[index])
-            x += 1
-        }
-        var backStr = String();
-        var index: String.Index
-        for i in 0 ..< lenght! {
-            index = (base64?.index((base64?.startIndex)!, offsetBy: i))!
-            let firstASC = base64![index]
-            let lastASC = tempStr[index]
-            backStr = backStr.appendingFormat("%d ",(firstASC.toInt() + lastASC.toInt()))
-        }
-    
-        index = backStr.index(backStr.endIndex, offsetBy: -1)
-        var result = backStr.substring(to:index)
-        result = (result.data(using: .utf8)?.base64EncodedString())!
-        return result
     }
     //MARK:- ***** 对象转json *****
     class func jsonFromObject(obj:Any) -> String {
@@ -100,11 +54,18 @@ class BQTool: NSObject {
     }
     //MARK:- ***** 钥匙串保存 *****
     //if want to use this method should open keychain sharing
+    @discardableResult
     class func saveKeychain(data:Data) -> Bool {
         var keychainQuery = self.getkeychain()
         SecItemDelete(keychainQuery as CFDictionary)
         keychainQuery[kSecValueData as String] = data as AnyObject?
         let statu = SecItemAdd(keychainQuery as CFDictionary, nil)
+        return statu == noErr
+    }
+    @discardableResult
+    class func deleteKeyChain() -> Bool {
+        let keychainQuery = self.getkeychain()
+        let statu = SecItemDelete(keychainQuery as CFDictionary)
         return statu == noErr
     }
     class func loadKeychain() -> Data? {
@@ -120,44 +81,10 @@ class BQTool: NSObject {
         }
         return nil
     }
-    class func deleteKeyChain() -> Bool {
-        let keychainQuery = self.getkeychain()
-        let statu = SecItemDelete(keychainQuery as CFDictionary)
-        return statu == noErr
-    }
-    
+    //MARK:- ***** private Method *****
     private class func getkeychain() -> Dictionary<String,AnyObject> {
         let serveice = self.currentBundleIdentifier()
         return Dictionary(dictionaryLiteral: (kSecClass as String,kSecClassGenericPassword as AnyObject),(kSecAttrService as String ,serveice as AnyObject),(kSecAttrAccount as String,serveice as AnyObject),(kSecAttrAccessible as String,kSecAttrAccessibleAfterFirstUnlock as AnyObject))
-    }
-    class func creteRowTF(top:CGFloat, height:CGFloat, title:String, holder:String?, superView: UIView) -> UITextField {
-        let view = UIView(frame: CGRect(x: 0, y: top, width: UIScreen.main.bounds.size.width, height: height))
-        let label = UILabel(frame: CGRect(x: BQAdjust(x: 40), y: 0, width: BQAdjust(x: 140), height: height))
-        label.font = UIFont.textFont
-        label.text = title
-        view.addSubview(label)
-        
-        let textField = UITextField(frame: CGRect(x: label.right, y: 0, width: UIScreen.main.bounds.size.width - label.right - BQAdjust(x: 40), height: height))
-        textField.placeholder = holder
-        textField.textColor = UIColor.textColor
-        textField.font = UIFont.textFont
-        textField.text = ""
-        view.addSubview(textField)
-        
-        view.layer.addSublayer(CALayer.lineLayer(frame: CGRect(x: 0, y: height - 1, width: view.width, height: 1)))
-        superView.addSubview(view)
-        return textField
-    }
-    class func saveAccountPwd(name:String, pwd:String) {
-        UserDefaults.standard.set(name, forKey: "account")
-        UserDefaults.standard.synchronize()
-        let dic = ["account":name,"password":pwd]
-        let data = BQTool.jsonFromObject(obj: dic).data(using: .utf8)
-        if BQTool.saveKeychain(data: data!) {
-            Log("登录信息保存成功")
-        }else {
-            Log("登录信息保存失败")
-        }
     }
 }
 

@@ -46,7 +46,7 @@ extension UIImage {
         UIGraphicsEndImageContext();
         let data = UIImageJPEGRepresentation(newImage, 1)!
         
-        var dataLen = data.bytes.count
+        var dataLen = data.count
         let aim_max = aimLength * 1024 + accuracy * 1024
         let aim_min = aimLength * 1024 - accuracy * 1024
         
@@ -63,7 +63,7 @@ extension UIImage {
                 }
                 flag += 1
                 let imageData = UIImageJPEGRepresentation(newImage, midQuality)!;
-                dataLen = imageData.bytes.count
+                dataLen = imageData.count
                 if dataLen > aim_max{
                     maxQuality = midQuality
                     continue

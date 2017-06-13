@@ -95,7 +95,27 @@ extension UIView {
         self.layer.borderColor = color.cgColor
         self.layer.borderWidth = 1.0
     }
-    
+    func addTapGes(action:@escaping (_ view: UIView) -> Void) {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.tapGestureAction))
+        self.isUserInteractionEnabled = true
+        self.action = action
+        self.addGestureRecognizer(gesture)
+    }
+    @discardableResult
+    func setCornerColor( color:UIColor, readius:CGFloat, corners:UIRectCorner) -> CAShapeLayer {
+        guard let supView = self.superview else {
+            assert(false, "\(self) must have superview")
+        }
+        let beizPath = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: readius, height: readius))
+        let colorLayer = CAShapeLayer()
+        colorLayer.frame = self.frame
+        colorLayer.path = beizPath.cgPath
+        colorLayer.fillColor = color.cgColor
+        self.backgroundColor = UIColor.clear
+        supView.layer.addSublayer(colorLayer)
+        supView.bringSubview(toFront: self)
+        return colorLayer
+    }
     //MARK: ---- 添加点击手势
     typealias addBlock = (_ imageView: UIView) -> Void
     
@@ -109,12 +129,6 @@ extension UIView {
         set (newValue){
             objc_setAssociatedObject(self, &AssociatedKeys.actionKey, newValue!, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
-    }
-    func addTagGes(action:@escaping (_ view: UIView) -> Void) {
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.tapGestureAction))
-        self.isUserInteractionEnabled = true
-        self.action = action
-        self.addGestureRecognizer(gesture)
     }
     @objc private func tapGestureAction() {
         if let action = self.action {

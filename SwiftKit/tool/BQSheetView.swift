@@ -14,7 +14,7 @@ enum SheetType {
 }
 
 class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate {
-
+    
     //MARK: - ***** Ivars *****
     private var title: String?
     private var type: SheetType!
@@ -90,13 +90,13 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
     }
     
     private func startAnimation() {
-        UIView.animate(withDuration: 0.25) { 
+        UIView.animate(withDuration: 0.25) {
             self.bottomView.top = self.height - self.bottomView.height
             self.backView.alpha = 1
         }
     }
     private func removeAnimation() {
-        UIView.animate(withDuration: 0.25, animations: { 
+        UIView.animate(withDuration: 0.25, animations: {
             self.bottomView.top = self.height
             self.backView.alpha = 0
         }) { (flag) in
@@ -141,13 +141,8 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
             lab.textColor = UIColor.gray
             let labHeight = titl.boundingRect(with: CGSize(width: labWidth, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName:lab.font], context: nil).size.height + 20
             lab.height = labHeight
-            let colorLayer = CAShapeLayer()
-            colorLayer.frame = lab.frame
-            let bizerPath = UIBezierPath(roundedRect: colorLayer.bounds, byRoundingCorners: [.topLeft,.topRight], cornerRadii: CGSize(width: 8, height: 8))
-            colorLayer.path = bizerPath.cgPath
-            colorLayer.fillColor = UIColor.white.cgColor
-            self.bottomView.layer.addSublayer(colorLayer)
             self.bottomView.addSubview(lab)
+            lab.setCornerColor(color: UIColor.white, readius: 8, corners: [.topLeft,.topRight])
             top = labHeight
         }
         
@@ -161,26 +156,17 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
             btn.titleLabel?.textAlignment = .center
             btn.setTitleColor(UIColor.black, for: .normal)
             btn.addTarget(self, action: #selector(tableBtnAction(btn:)), for: .touchUpInside)
+            self.bottomView.addSubview(btn)
             if count == self.tableDatas.count - 1 {
-                let colorLayer = CAShapeLayer()
-                colorLayer.frame = btn.frame
-                let bizerPath = UIBezierPath(roundedRect: colorLayer.bounds, byRoundingCorners: [.bottomLeft,.bottomRight], cornerRadii: CGSize(width: 8, height: 8))
-                colorLayer.path = bizerPath.cgPath
-                colorLayer.fillColor = UIColor.white.cgColor
-                self.bottomView.layer.addSublayer(colorLayer)
+                btn.setCornerColor(color: UIColor.white, readius: 8, corners: [.bottomLeft,.bottomRight])
+                
             }else {
                 if count == 0 && self.title == nil {
-                    let colorLayer = CAShapeLayer()
-                    colorLayer.frame = btn.frame
-                    let bizerPath = UIBezierPath(roundedRect: colorLayer.bounds, byRoundingCorners: [.topLeft,.topRight], cornerRadii: CGSize(width: 8, height: 8))
-                    colorLayer.path = bizerPath.cgPath
-                    colorLayer.fillColor = UIColor.white.cgColor
-                    self.bottomView.layer.addSublayer(colorLayer)
+                    btn.setCornerColor(color: UIColor.white, readius: 8, corners: [.topLeft,.topRight])
                 }else {
                     btn.backgroundColor = UIColor.white
                 }
             }
-            self.bottomView.addSubview(btn)
             count += 1
             top = btn.bottom + 1
         }
@@ -211,13 +197,8 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
             lab.textColor = UIColor.gray
             let labHeight = titl.boundingRect(with: CGSize(width: labWidth, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName:lab.font], context: nil).size.height + 20
             lab.height = labHeight
-            let colorLayer = CAShapeLayer()
-            colorLayer.frame = lab.frame
-            let bizerPath = UIBezierPath(roundedRect: colorLayer.bounds, byRoundingCorners: [.topLeft,.topRight], cornerRadii: CGSize(width: 8, height: 8))
-            colorLayer.path = bizerPath.cgPath
-            colorLayer.fillColor = UIColor.white.cgColor
-            self.bottomView.layer.addSublayer(colorLayer)
             self.bottomView.addSubview(lab)
+            lab.setCornerColor(color: UIColor.white, readius: 8, corners: [.topLeft,.topRight])
             top = labHeight
         }
         top += 1
@@ -243,13 +224,8 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
         lab.addTagGes(action: {[weak self] (view) in
             self?.removeAnimation()
         })
-        let colorLayer = CAShapeLayer()
-        colorLayer.frame = lab.frame
-        let bizerPath = UIBezierPath(roundedRect: colorLayer.bounds, byRoundingCorners: [.bottomLeft,.bottomRight], cornerRadii: CGSize(width: 8, height: 8))
-        colorLayer.path = bizerPath.cgPath
-        colorLayer.fillColor = UIColor.white.cgColor
-        self.bottomView.layer.addSublayer(colorLayer)
         self.bottomView.addSubview(lab)
+        lab.setCornerColor(color: UIColor.white, readius: 8, corners: [.bottomLeft,.bottomRight])
         return lab.bottom
     }
 }

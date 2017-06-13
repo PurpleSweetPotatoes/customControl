@@ -22,16 +22,15 @@ enum ClipSizeType {
 class BQImagePicker: NSObject,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     //MARK: - ***** Ivars *****
     //单例写法
-    static let sharedInstance = BQImagePicker()
+    private static let sharedInstance = BQImagePicker()
     private override init() {
-//        self.imagePicker = UIImagePickerController()
-//        self.imagePicker.delegate = self;
+        //        self.imagePicker = UIImagePickerController()
+        //        self.imagePicker.delegate = self;
     }
     lazy var imagePicker:UIImagePickerController = {
-            let pickVc = UIImagePickerController()
-            pickVc.delegate = self;
-            Log("11");
-            return pickVc;
+        let pickVc = UIImagePickerController()
+        pickVc.delegate = self;
+        return pickVc;
     }()
     var handle:((UIImage) -> Void)?
     var type:ClipSizeType!
@@ -44,20 +43,21 @@ class BQImagePicker: NSObject,UIImagePickerControllerDelegate,UINavigationContro
         let picker = BQImagePicker.sharedInstance
         picker.type = type
         picker.handle = handle
-        let alertVc = UIAlertController(title: "获取图像方式", message: Optional.none, preferredStyle: UIAlertControllerStyle.actionSheet)
+        var strDatas:[String] = []
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            alertVc.addAction(UIAlertAction(title: "拍照", style: UIAlertActionStyle.default, handler: { (action) in
-                picker.showImagePickVc(type: .camera)
-            }))
+            strDatas.append("拍照")
         }
-        alertVc.addAction(UIAlertAction(title: "相册", style: UIAlertActionStyle.default, handler: { (action) in
-            picker.showImagePickVc(type: .photoLibrary)
-        }))
-        alertVc.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.cancel, handler: Optional.none))
-       BQTool.currentVc().present(alertVc, animated: true, completion: nil)
+        strDatas.append("相册")
+        BQSheetView.showSheetView(tableDatas: strDatas, title: "获取图像方式") { (index) in
+            if strDatas[index] == "拍照" {
+                picker.showImagePickVc(type: .camera)
+            }else {
+                picker.showImagePickVc(type: .photoLibrary)
+            }
+        }
     }
     //MARK: - ***** initialize Method *****
-    func showImagePickVc(type:UIImagePickerControllerSourceType) -> Void {
+    private func showImagePickVc(type:UIImagePickerControllerSourceType) -> Void {
         self.imagePicker.sourceType = type
         self.imagePicker.allowsEditing = self.type == ClipSizeType.none
         BQTool.currentVc().present(self.imagePicker, animated: true, completion: nil)
@@ -69,20 +69,20 @@ class BQImagePicker: NSObject,UIImagePickerControllerDelegate,UINavigationContro
     //MARK: - ***** create Method *****
     
     //MARK: - ***** respond event Method *****
-
+    
     //MARK: - ***** Protocol *****
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image: UIImage!
         if self.type == ClipSizeType.none {
             image = info["UIImagePickerControllerEditedImage"] as! UIImage
-            picker.dismiss(animated: true, completion: { 
+            picker.dismiss(animated: true, completion: {
                 if self.handle != nil {
                     self.handle!(image)
                 }
             })
         }else {
             image = info["UIImagePickerControllerOriginalImage"] as! UIImage;
-            picker.dismiss(animated: true, completion: { 
+            picker.dismiss(animated: true, completion: {
                 BQClipView.showClipView(image: image, type: self.type, handle: self.handle)
             })
         }
@@ -113,7 +113,7 @@ class BQClipView: UIView {
         self.image = image
         self.type = type
         super.init(frame: UIScreen.main.bounds)
-        self.initUI() 
+        self.initUI()
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -223,21 +223,21 @@ class BQClipView: UIView {
             case .ended:
                 self.startCenter = CGPoint(x: 0, y: 0)
                 if self.imageView.frame.origin.x > self.clipLayer.frame.origin.x {
-                    UIView.animate(withDuration: 0.1, animations: { 
+                    UIView.animate(withDuration: 0.1, animations: {
                         var frame = self.imageView.frame;
                         frame.origin.x = self.clipLayer.frame.origin.x;
                         self.imageView.frame = frame;
                     })
                 }
                 if (self.imageView.frame.maxX < self.clipLayer.frame.maxX) {
-                    UIView.animate(withDuration: 0.1, animations: { 
+                    UIView.animate(withDuration: 0.1, animations: {
                         var frame = self.imageView.frame;
                         frame.origin.x = self.clipLayer.frame.maxX - frame.size.width;
                         self.imageView.frame = frame;
                     })
                 }
                 if self.imageView.frame.origin.y > self.clipLayer.frame.origin.y {
-                    UIView.animate(withDuration: 0.1, animations: { 
+                    UIView.animate(withDuration: 0.1, animations: {
                         var frame = self.imageView.frame;
                         frame.origin.y = self.clipLayer.frame.origin.y;
                         self.imageView.frame = frame;

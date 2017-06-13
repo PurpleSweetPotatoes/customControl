@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import SWIFTJSON
+//import SwiftyJSON
 
 class BQModel: NSObject {
     required override init() {

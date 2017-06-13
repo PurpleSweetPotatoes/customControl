@@ -18,6 +18,7 @@ class BQHudView: UIView {
     
     var showTimes: Int = 0
     var activeView: UIActivityIndicatorView?
+    
     class func startActive() {
         hudView.showTimes += 1
         if hudView.superview == nil {

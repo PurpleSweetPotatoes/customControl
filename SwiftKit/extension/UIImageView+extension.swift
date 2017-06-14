@@ -17,7 +17,7 @@ extension UIImageView {
         self.kf.setImage(with: URL(string: urlStr!), placeholder: nil, options: nil, progressBlock: nil, completionHandler: nil)
     }
     func canshow() {
-        self.addTagGes {[weak self] (view) in
+        self.addTapGes {[weak self] (view) in
             if let image = self?.image {
                 BQShowImageView.show(img: image, origiFrame: (self?.frame)!)
             }
@@ -42,7 +42,7 @@ class BQShowImageView: UIView {
         showView.initUI()
         showView.imageView.image = img
         showView.origiFrame = origiFrame
-        showView.addTagGes {[weak showView] (view) in
+        showView.addTapGes {[weak showView] (view) in
             showView?.removeSelf()
         }
         UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(showView)

@@ -74,7 +74,7 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
         self.backView = UIView(frame: self.bounds)
         self.backView.backgroundColor = UIColor(white: 0.3, alpha: 0.6)
         self.backView.alpha = 0
-        self.backView.addTagGes {[weak self] (view) in
+        self.backView.addTapGes {[weak self] (view) in
             self?.removeAnimation()
         }
         self.addSubview(self.backView)
@@ -177,7 +177,7 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
         lab.layer.masksToBounds = true
         lab.textAlignment = .center
         lab.backgroundColor = UIColor.white
-        lab.addTagGes(action: {[weak self] (view) in
+        lab.addTapGes(action: {[weak self] (view) in
             self?.removeAnimation()
         })
         self.bottomView.addSubview(lab)
@@ -221,7 +221,7 @@ class BQSheetView: UIView, UICollectionViewDataSource, UICollectionViewDelegate 
         let lab = UILabel(frame: CGRect(x: spacing, y: top, width: labWidth, height: 44))
         lab.text = "返回"
         lab.textAlignment = .center
-        lab.addTagGes(action: {[weak self] (view) in
+        lab.addTapGes(action: {[weak self] (view) in
             self?.removeAnimation()
         })
         self.bottomView.addSubview(lab)

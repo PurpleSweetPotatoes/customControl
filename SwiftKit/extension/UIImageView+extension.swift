@@ -14,13 +14,17 @@ import UIKit
 
 extension UIImageView {
     func setImage(urlStr:String?) {
-        self.kf.setImage(with: URL(string: urlStr!), placeholder: nil, options: nil, progressBlock: nil, completionHandler: nil)
+        guard let url = urlStr else {
+            return
+        }
+        self.kf.setImage(with: URL(string: url), placeholder: nil, options: nil, progressBlock: nil, completionHandler: nil)
     }
     func canshow() {
-        self.addTapGes {[weak self] (view) in
-            if let image = self?.image {
-                BQShowImageView.show(img: image, origiFrame: (self?.frame)!)
+        self.addTagGes {[weak self] (view) in
+            guard let image = self?.image, let supView = self?.superview else{
+                return
             }
+            BQShowImageView.show(img: image, origiFrame: supView.convert((self?.frame)!, to: UIApplication.shared.keyWindow?.rootViewController?.view))
         }
     }
 }

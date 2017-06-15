@@ -16,6 +16,9 @@ class BQVerifyCodeView: UIView {
     private var disturbLineNum: Int = 0
     private var fontSize: CGFloat = 0
     var textColor: UIColor?
+    /// 是否区分大小写
+    var checkStrict = false
+    
     //MARK: - ***** Class Method *****
     
     //MARK: - ***** initialize Method *****
@@ -31,7 +34,10 @@ class BQVerifyCodeView: UIView {
     }
     //MARK: - ***** public Method *****
     func verify(str:String) -> Bool {
-        return str == self.verCode
+        if self.checkStrict {
+            return str == self.verCode
+        }
+        return str.uppercased() == self.verCode.uppercased()
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.setNeedsDisplay()

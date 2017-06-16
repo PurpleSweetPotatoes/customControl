@@ -46,9 +46,15 @@ extension String {
     }
     subscript(index: Int) -> Character {
         get {
+            if index >= self.characters.count {
+                return " "
+            }
             return self[self.index(startIndex, offsetBy: index)]
         }
         set {
+            if index >= self.characters.count {
+                return
+            }
             let rangeIndex = self.index(startIndex, offsetBy: index)
             self.replaceSubrange(rangeIndex...rangeIndex, with: String(newValue))
         }

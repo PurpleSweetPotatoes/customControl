@@ -53,6 +53,15 @@ class BQTool: NSObject {
             }
         }
     }
+    class func callPhone(_ str:String) {
+        if let url = URL(string: "telprompt://" + str) {
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }
+    }
     //MARK:- ***** 对象转json *****
     class func jsonFromObject(obj:Any) -> String {
         let data:Data = try! JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)

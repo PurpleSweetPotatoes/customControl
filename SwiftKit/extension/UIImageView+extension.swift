@@ -20,7 +20,7 @@ extension UIImageView {
         self.kf.setImage(with: URL(string: url), placeholder: nil, options: nil, progressBlock: nil, completionHandler: nil)
     }
     func canshow() {
-        self.addTagGes {[weak self] (view) in
+        self.addTapGes {[weak self] (view) in
             guard let image = self?.image, let supView = self?.superview else{
                 return
             }

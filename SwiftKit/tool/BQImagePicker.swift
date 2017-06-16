@@ -10,6 +10,7 @@ import UIKit
 
 enum ClipSizeType {
     case none
+    case system
     case oneScaleOne
     case twoScaleOne
     case threeScaleTwo
@@ -23,23 +24,19 @@ class BQImagePicker: NSObject,UIImagePickerControllerDelegate,UINavigationContro
     //MARK: - ***** Ivars *****
     //单例写法
     private static let sharedInstance = BQImagePicker()
+    private var handle:((UIImage) -> Void)!
+    private var imagePicker: UIImagePickerController!
+    private var type:ClipSizeType!
     private override init() {
-        //        self.imagePicker = UIImagePickerController()
-        //        self.imagePicker.delegate = self;
+        super.init()
+        self.imagePicker = UIImagePickerController()
+        self.imagePicker.delegate = self;
     }
-    lazy var imagePicker:UIImagePickerController = {
-        let pickVc = UIImagePickerController()
-        pickVc.delegate = self;
-        return pickVc;
-    }()
-    var handle:((UIImage) -> Void)?
-    var type:ClipSizeType!
+    
+    
     
     //MARK: - ***** Class Method *****
-    class func showPicker(handle:((UIImage) -> Void)?) -> Void {
-        self.showPicker(type: ClipSizeType.none, handle: handle)
-    }
-    class func showPicker(type:ClipSizeType, handle:((UIImage) -> Void)?) -> Void {
+    class func showPicker(type:ClipSizeType = .none, handle:@escaping (UIImage) -> Void) -> Void {
         let picker = BQImagePicker.sharedInstance
         picker.type = type
         picker.handle = handle
@@ -59,7 +56,7 @@ class BQImagePicker: NSObject,UIImagePickerControllerDelegate,UINavigationContro
     //MARK: - ***** initialize Method *****
     private func showImagePickVc(type:UIImagePickerControllerSourceType) -> Void {
         self.imagePicker.sourceType = type
-        self.imagePicker.allowsEditing = self.type == ClipSizeType.none
+        self.imagePicker.allowsEditing = self.type == ClipSizeType.system
         BQTool.currentVc().present(self.imagePicker, animated: true, completion: nil)
     }
     //MARK: - ***** Instance Method *****
@@ -74,12 +71,13 @@ class BQImagePicker: NSObject,UIImagePickerControllerDelegate,UINavigationContro
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image: UIImage!
         if self.type == ClipSizeType.none {
+            image = info["UIImagePickerControllerOriginalImage"] as! UIImage
+            self.handle!(image)
+            picker.dismiss(animated: true, completion: nil)
+        }else if self.type == ClipSizeType.system {
             image = info["UIImagePickerControllerEditedImage"] as! UIImage
-            picker.dismiss(animated: true, completion: {
-                if self.handle != nil {
-                    self.handle!(image)
-                }
-            })
+            self.handle!(image)
+            picker.dismiss(animated: true, completion: nil)
         }else {
             image = info["UIImagePickerControllerOriginalImage"] as! UIImage;
             picker.dismiss(animated: true, completion: {

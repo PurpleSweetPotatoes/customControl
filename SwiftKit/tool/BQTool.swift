@@ -43,6 +43,16 @@ class BQTool: NSObject {
         let end = CACurrentMediaTime()
         Log("方法耗时为：\(end-start)")
     }
+    //MARK:- ***** 应用设置跳转 *****
+    class func gotoAppSystemSet() {
+        if let url = URL(string:UIApplicationOpenSettingsURLString) {
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }
+    }
     //MARK:- ***** 对象转json *****
     class func jsonFromObject(obj:Any) -> String {
         let data:Data = try! JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)

@@ -9,27 +9,47 @@
 import UIKit
 
 class BQPhotoView: UIView {
-
+    
     //MARK: - ***** Ivars *****
     private(set) lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = UIColor.black
         return imageView
     }()
     private var singleTapAction: ((UITapGestureRecognizer) -> ())?
     fileprivate var scrollView: UIScrollView!
-    //MARK: - ***** initialize Method *****
+    private var backView: UIView!
+    fileprivate var origiFrame: CGRect!
     
-    override init(frame: CGRect) {
+    class func show(imgView: UIImageView) {
+        guard let image = imgView.image, let supView = imgView.superview else{
+            return
+        }
+        let showView = BQPhotoView(frame: UIScreen.main.bounds)
+        showView.imageView.image = image
+        showView.origiFrame = supView.convert(imgView.frame, to: UIApplication.shared.keyWindow?.rootViewController?.view)
+        showView.tapAction { (tap) in
+            showView.removeSelf()
+        }
+        UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(showView)
+        showView.startAnimation()
+    }
+    class func show(img:UIImage) {
+        let showView = BQPhotoView(frame: UIScreen.main.bounds)
+        showView.imageView.image = img
+        let imgSize = img.size
+        let height = imgSize.height * showView.width / imgSize.width
+        let frame = CGRect(x: 0, y: (showView.height - height) * 0.5, width: showView.width, height: height)
+        showView.imageView.frame = frame
+        UIApplication.shared.keyWindow?.rootViewController?.view.addSubview(showView)
+    }
+    //MARK: - ***** initialize Method *****
+    private override init(frame: CGRect) {
         super.init(frame: frame)
         self.initUI()
         self.initGesture()
     }
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -52,9 +72,30 @@ class BQPhotoView: UIView {
         self.addGestureRecognizer(doubleTap)
     }
     private func initUI() {
+        self.backView = UIView(frame: self.bounds)
+        self.backView.backgroundColor = UIColor.black
+        self.addSubview(self.backView)
         self.addScrollView()
     }
-    
+    private func startAnimation() {
+        self.imageView.frame = self.origiFrame
+        self.backView.alpha = 0
+        let imgSize = self.imageView.image!.size
+        let height = imgSize.height * self.width / imgSize.width
+        let frame = CGRect(x: 0, y: (self.height - height) * 0.5, width: self.width, height: height)
+        UIView.animate(withDuration: 0.25, animations: {
+            self.imageView.frame = frame
+            self.backView.alpha = 1
+        })
+    }
+    private func removeSelf() {
+        UIView.animate(withDuration: 0.25, animations: {
+            self.backView.alpha = 0
+            self.imageView.frame = self.origiFrame!
+        }) { (finish) in
+            self.removeFromSuperview()
+        }
+    }
     //MARK: - ***** LoadData Method *****
     
     //MARK: - ***** respond event Method *****
@@ -64,18 +105,26 @@ class BQPhotoView: UIView {
         if scrollView.zoomScale != scrollView.minimumZoomScale {
             scrollView.setZoomScale(scrollView.minimumZoomScale, animated: false)
         }
-        singleTapAction?(ges)
+        if let block = self.singleTapAction {
+            block(ges)
+        }else {
+            self.removeFromSuperview()
+        }
     }
     @objc private func handleDoubleTap(ges: UITapGestureRecognizer) {
         if self.imageView.image == nil {
             return
         }
         if scrollView.zoomScale <= scrollView.minimumZoomScale {
-            let location = ges.location(in: scrollView)
-            let width = scrollView.width/scrollView.maximumZoomScale
-            let height = scrollView.height/scrollView.maximumZoomScale
-            let rect = CGRect(x: location.x * (1 - 1/scrollView.maximumZoomScale), y: location.y * (1 - 1/scrollView.maximumZoomScale), width: width, height: height)
+            var location = ges.location(in: ges.view)
+            print(location)
+            location = imageView.convert(location, from: self)
+            print(location)
+            let width = imageView.width/scrollView.maximumZoomScale
+            let height = imageView.height/scrollView.maximumZoomScale
+            let rect = CGRect(x: location.x - width * 0.5, y: location.y - height * 0.5, width: width, height: height)
             scrollView.zoom(to: rect, animated: true)
+            print(scrollView.contentOffset)
         }else {
             scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
         }
@@ -86,7 +135,6 @@ class BQPhotoView: UIView {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.clipsToBounds = true
-        scrollView.backgroundColor = UIColor.black
         scrollView.maximumZoomScale = 2.0
         scrollView.minimumZoomScale = 1.0
         scrollView.delegate = self

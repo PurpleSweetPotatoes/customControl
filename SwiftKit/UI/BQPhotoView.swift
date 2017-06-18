@@ -116,10 +116,7 @@ class BQPhotoView: UIView {
             return
         }
         if scrollView.zoomScale <= scrollView.minimumZoomScale {
-            var location = ges.location(in: ges.view)
-            print(location)
-            location = imageView.convert(location, from: self)
-            print(location)
+            let location = ges.location(in: imageView)
             let width = imageView.width/scrollView.maximumZoomScale
             let height = imageView.height/scrollView.maximumZoomScale
             let rect = CGRect(x: location.x - width * 0.5, y: location.y - height * 0.5, width: width, height: height)

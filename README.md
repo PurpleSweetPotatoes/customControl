@@ -4,9 +4,9 @@
 ####关于代码
 这些代码为从学习iOS来到现在实际项目开发中，精炼出来的封装代码,使用相对简单，由于所做的项目开发难度相对较小，所以这里封装的一些都属于常用的小工具。希望能给大家带来便利。下面是几个具体封装类的使用方法
 
-|< 该项目已拆分为oc和swift版本具体链接如下
-|< [OCCustomControl](https://github.com/PurpleSweetPotatoes/OC-Custom-Control)
-|< [SwiftCustomControl](https://github.com/PurpleSweetPotatoes/Swift-Custom-Control)
+> 该项目已拆分为oc和swift版本具体链接如下
+> [OCCustomControl](https://github.com/PurpleSweetPotatoes/OC-Custom-Control)
+> [SwiftCustomControl](https://github.com/PurpleSweetPotatoes/Swift-Custom-Control)
 
 ####BQScreenAdaptation.h
 此类主要是为了屏幕适配所写，使用的原理为等比例适配。不同于传统的等比例适配，笔者的等比例全部是基于屏幕宽度来进行等比例计算。经过两个项目的编写发现使用此类的好处在与可以直接适配iPhone的所有机型分辨率。由于全部以宽来进行等比例所以布局出来的高度可能会超出实际屏幕高度。在这里笔者的解决方案为设计一个容器视图(scrollView)用以添加界面，若布局后的视图超出屏幕只需要再设置容器视图的画布展示大小即可。
